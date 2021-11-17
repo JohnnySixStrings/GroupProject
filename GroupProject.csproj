@@ -20,7 +20,8 @@
     <Folder Include="Entities\" />
     <Folder Include="Enums\" />
     <Folder Include="Repositories\" />
-    <Folder Include="ViewModels\" />
+	<Folder Include="ViewModels\" />
+	<Folder Include="Views\"/>
   </ItemGroup>
 
 </Project>
