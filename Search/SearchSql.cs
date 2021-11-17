@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GroupProject.ViewModels
+namespace GroupProject.Search
 {
-    internal class MainViewModel
+    public class SearchSql
     {
     }
 }
