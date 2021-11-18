@@ -23,5 +23,6 @@ namespace GroupProject.Search
         {
             InitializeComponent();
         }
+
     }
 }
