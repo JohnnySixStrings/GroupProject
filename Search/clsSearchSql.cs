@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace GroupProject.Search
 {
-    public class clsSearchSql
+    class clsSearchSQL
     {
-
-
     }
 }
