@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,9 +21,15 @@ namespace GroupProject.Search
     /// </summary>
     public partial class wndSearch : Window
     {
+        public IObservable<EventPattern<RoutedEventArgs>> CancelObservable { get; }
+
         public wndSearch()
         {
             InitializeComponent();
+
+            CancelObservable = Observable.FromEventPattern<RoutedEventHandler,RoutedEventArgs>(
+                x => this.btnCancel.Click += x, 
+                x=> this.btnCancel.Click -= x);
         }
 
         private void btnSelect_Click(object sender, RoutedEventArgs e)

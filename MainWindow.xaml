@@ -27,11 +27,14 @@
         <!--Menu for switching between views-->
         <Menu IsMainMenu="True" Margin="10" Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem
+
                 Header="Invoice">            
                 <MenuItem
                 Header="Search"
+                Click="NavigateToSearch"
                 />
                 <MenuItem
+                Click="NavigateToItems"
                 Header="Items"
                 />
             </MenuItem>

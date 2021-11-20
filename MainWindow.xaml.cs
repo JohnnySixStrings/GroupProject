@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GroupProject.Item;
+using GroupProject.Search;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Reactive;
 
 namespace GroupProject
 {
@@ -20,9 +23,36 @@ namespace GroupProject
     /// </summary>
     public partial class MainWindow : Window
     {
+        private wndSearch _searchWindow;
+        private wndItems _itemsWindow;
         public MainWindow()
         {
+            _itemsWindow = new wndItems();
+            _searchWindow = new wndSearch();
             InitializeComponent();
+            
+            _searchWindow.CancelObservable.Subscribe((x) =>
+            {
+                _searchWindow.Hide();
+                this.Show();
+            });
+            
+            _itemsWindow.CancelObservable.Subscribe(x =>
+            {
+                _itemsWindow.Hide();
+                this.Show();
+            });
+        }
+
+        private void NavigateToSearch(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            this._searchWindow.Show();
+        }
+        private void NavigateToItems(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            _itemsWindow.Show();
         }
     }
 }

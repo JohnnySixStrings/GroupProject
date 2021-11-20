@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,11 +18,17 @@ namespace GroupProject.Item
 {
     public partial class wndItems : Window
     {
+        public IObservable<EventPattern<RoutedEventArgs>> CancelObservable { get; }
+
+
         // clsItemsLogic Logic = new clsItemsLogic();
 
         public wndItems()
         {
             InitializeComponent();
+            CancelObservable = Observable.FromEventPattern<RoutedEventHandler,RoutedEventArgs>( 
+                x => this.ExitButton.Click += x,
+                x => this.ExitButton.Click -= x);
         }
 
         /// <summary>

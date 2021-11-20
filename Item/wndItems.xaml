@@ -83,6 +83,13 @@
                     FontSize="15" 
                     HorizontalAlignment="Right" 
                     Margin="10"/>
+            
+            <Button x:Name="ExitButton" 
+                    Content="Exit" 
+                    Width="120" 
+                    FontSize="15" 
+                    HorizontalAlignment="Right" 
+                    Margin="10"/>
         </StackPanel>
     </Grid>
 </Window>
