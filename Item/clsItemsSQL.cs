@@ -24,12 +24,12 @@ namespace GroupProject.Item
         /// <param name="iDesc">Item Description</param>
         /// <param name="iCost">Item Cost</param>
         /// <returns>Returns SQL Statement in form of a string</returns>
-        public string SelectItemDesc(char iCode = '', string iDesc = "",  string iCost = "")
+        public string SelectItemDesc(char iCode = '\0', string iDesc = "",  string iCost = "")
         {
             string query = "SELECT ItemCode, ItemDesc, Cost FROM ItemDesc";
-            if (iCode != '' && iDesc != "" && iCost != "")
+            if (iCode != '\0' && !string.IsNullOrWhiteSpace(iDesc) && !string.IsNullOrWhiteSpace(iCost))
             {
-                query += $"WHERE ItemCode = {iCode} AND ItemDesc = {iDesc} AND Cost = {iCost}";
+                query += $" WHERE ItemCode = {iCode} AND ItemDesc = {iDesc} AND Cost = {iCost}";
             }
             return query;
         }
@@ -79,6 +79,7 @@ namespace GroupProject.Item
         public string DeleteItemDesc (char iCode)
         {
             string sSQL = $"DELETE FROM ItemDesc WHERE ItemCode = {iCode}";
+            return sSQL;
         }
     }
 }
