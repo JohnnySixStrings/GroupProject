@@ -24,14 +24,14 @@ namespace GroupProject.Search
             InitializeComponent();
         }
 
-        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        private void btnSelect_Click(object sender, RoutedEventArgs e)
         {
-
+           
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-
+            // wndSearch.Close(); this will be used to close the current window and show the MainWindow again. 
         }
     }
 }

@@ -8,7 +8,7 @@
         Title="Search" Height="450" Width="800">
     <Canvas>
         <DataGrid x:Name="dgResults" Height="206" Width="445" Canvas.Left="258" Canvas.Top="79"/>
-        <Button x:Name="btnSearch" Content="Search" Canvas.Left="164" Canvas.Top="321" Height="51" Width="120" FontSize="15" Click="btnSearch_Click"/>
+        <Button x:Name="btnSelect" Content="Select" Canvas.Left="164" Canvas.Top="321" Height="51" Width="120" FontSize="15" Click="btnSelect_Click"/>
         <Button x:Name="btnCancel" Content="Cancel" Canvas.Left="506" Canvas.Top="321" Height="51" Width="120" FontSize="15" Click="btnCancel_Click"/>
         <ComboBox x:Name="cbTotalCharge" Canvas.Left="104" Canvas.Top="248" Width="120"/>
         <ComboBox x:Name="cbInvoiceDate" Canvas.Left="104" Canvas.Top="166" Width="120"/>
