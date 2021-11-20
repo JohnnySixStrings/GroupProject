@@ -16,6 +16,19 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Menu IsMainMenu="True" Margin="10">
+            <MenuItem
+                Header="Invoice">            
+                <MenuItem
+                Header="Search"
+                Icon="{materialDesign:PackIcon Kind=Search}"
+                />
+                <MenuItem
+                Header="Items"
+                />
+            </MenuItem>
+
+        </Menu>
 
     </Grid>
 </Window>
