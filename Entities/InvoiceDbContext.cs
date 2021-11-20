@@ -35,7 +35,7 @@ namespace GroupProject.Entities
         /// Allows for you to query against specific entities
         /// </summary>
         public virtual DbSet<Invoice> Invoices { get; set; }
-        public virtual DbSet<Item> Items { get; set; }
+        public virtual DbSet<ItemDescription> ItemDescriptions { get; set; }
         public virtual DbSet<InvoiceLineItem> InvoiceLineItems { get; set; }
     }
 }

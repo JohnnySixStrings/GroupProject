@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace GroupProject.Entities
 {
-    public class Item : IEntityTypeConfiguration<Item>
+    public class ItemDescription : IEntityTypeConfiguration<ItemDescription>
     {
-        public int ItemId { get; set; }
+        public int ItemDescriptionId { get; set; }
         public string Description { get; set; }
         public Decimal Cost { get; set; }
 
         public IList<InvoiceLineItem> InvoiceLineItems { get; set; }
-        public void Configure(EntityTypeBuilder<Item> builder)
+        public void Configure(EntityTypeBuilder<ItemDescription> builder)
         {
-            builder.HasKey(x => x.ItemId);
+            builder.HasKey(x => x.ItemDescriptionId);
             builder.Property(x => x.Cost)
                 .HasPrecision(19, 4);
         }

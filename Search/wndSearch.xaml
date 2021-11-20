@@ -6,13 +6,24 @@
         xmlns:local="clr-namespace:GroupProject.Search"
         mc:Ignorable="d"
         Title="Search" Height="450" Width="800">
-    <Canvas>
-        <DataGrid x:Name="dgResults" Height="206" Width="445" Canvas.Left="258" Canvas.Top="79"/>
-        <Button x:Name="btnSelect" Content="Select" Canvas.Left="164" Canvas.Top="321" Height="51" Width="120" FontSize="15" Click="btnSelect_Click"/>
-        <Button x:Name="btnCancel" Content="Cancel" Canvas.Left="506" Canvas.Top="321" Height="51" Width="120" FontSize="15" Click="btnCancel_Click"/>
-        <ComboBox x:Name="cbTotalCharge" Canvas.Left="104" Canvas.Top="248" Width="120"/>
-        <ComboBox x:Name="cbInvoiceDate" Canvas.Left="104" Canvas.Top="166" Width="120"/>
-        <ComboBox x:Name="cbInvoiceNum" Canvas.Left="104" Canvas.Top="95" Width="120"/>
+    <Grid>
+        <!--the number followed by a star tells how much of the screen each row should take up-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        
+        <DataGrid x:Name="dgResults" Grid.Row="1" Margin="10"/>
+         <!--moved buttons to the bottom row like you see in web forms-->
+        <Button x:Name="btnSelect" Content="Select"  Width="120" FontSize="15" Click="btnSelect_Click" Grid.Row="2" HorizontalAlignment="Left" Margin="10"/>
+        <Button x:Name="btnCancel" Content="Cancel"   Width="120" FontSize="15" Click="btnCancel_Click" Grid.Row="2" HorizontalAlignment="Right" Margin="10"/>
+        <!--put the elements in a stack panel on the first row 0  horizontally-->
+        <StackPanel Orientation="Horizontal">
+            <ComboBox x:Name="cbTotalCharge" Width="120" Margin="10"/>
+            <ComboBox x:Name="cbInvoiceDate" Width="120" Margin="10"/>
+            <ComboBox x:Name="cbInvoiceNum"  Width="120" Margin="10"/>
+        </StackPanel>
+    </Grid>
 
-    </Canvas>
 </Window>
