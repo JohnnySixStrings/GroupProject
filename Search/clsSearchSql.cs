@@ -8,5 +8,7 @@ namespace GroupProject.Search
 {
     class clsSearchSQL
     {
+
+
     }
 }
