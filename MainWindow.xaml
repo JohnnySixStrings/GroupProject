@@ -11,24 +11,56 @@
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
-        xmlns:rx="http://reactiveui.net"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Menu IsMainMenu="True" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        <!--Menu for switching between views-->
+        <Menu IsMainMenu="True" Margin="10" Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem
                 Header="Invoice">            
                 <MenuItem
                 Header="Search"
-                Icon="{materialDesign:PackIcon Kind=Search}"
                 />
                 <MenuItem
                 Header="Items"
                 />
             </MenuItem>
-
         </Menu>
-
+        <!--Data grid for displaying the line items on new or selected invoice also will be used for deleting line items-->
+        <DataGrid x:Name="LineItemDataGrid" Grid.Row="1" Grid.Column="0"/>
+        <!--Form for Invoice allowing to add items and edit or add invoice organization will changes not sure what I want yet-->
+        <StackPanel Grid.Row="1" Grid.Column="1" >
+            <TextBox materialDesign:HintAssist.Hint="InvoiceId" Width="140" Margin="10"/>
+            <TextBox materialDesign:HintAssist.Hint="TotalCost" Width="140" IsEnabled="False" Margin="10"/>
+            <DatePicker
+              Width="140"
+              materialDesign:HintAssist.Hint="Pick Date"
+              Style="{StaticResource MaterialDesignFilledDatePicker}" 
+              Margin="10"  
+                />
+            <ComboBox x:Name="ItemsComboBox"  Width="140" Margin="10"/>
+            <Button Content="Add LineItem" Width="140" Margin="10"/>
+        </StackPanel>
+        <!--invoice actions-->
+        <StackPanel 
+            Grid.Row="2" 
+            Grid.Column="2" 
+            Orientation="Horizontal" 
+            HorizontalAlignment="Center">
+            
+            <Button Content="Delete" Margin="10"/>
+            <Button Content="Save" Margin="10"/>
+            <Button Content="New" Margin="10"/>
+        </StackPanel>
     </Grid>
 </Window>
