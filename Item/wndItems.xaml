@@ -5,33 +5,84 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GroupProject.Item"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         Title="MainWindow" Height="450" Width="800">
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="5*"/>
-      <RowDefinition Height="*"/>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-    <DataGrid x:Name="dgItems" Grid.Row="0" Margin="10"/>
-    <StackPanel Orientation="Horizontal" Grid.Row="1">
-      <Label x:Name="lblDesc" Content="Description:" Width="110" Margin="10"
-             VerticalContentAlignment="Center" FontSize="18"/>
-      <TextBox x:Name="txtDesc" Text="Semi Precious Stone Ring" Width="240" Margin="10"
-             VerticalContentAlignment="Center" FontSize="18"/>
-      <Label x:Name="lblCost" Content="Cost: $" Width="70"
-             VerticalContentAlignment="Center" FontSize="18"/>
-      <TextBox x:Name="txtCost" Width="120" Margin="10"
-             VerticalContentAlignment="Center" FontSize="18"/>
-      <Label x:Name="lblCode" Content="Code:" Width="60"
-             VerticalContentAlignment="Center" FontSize="18"/>
-      <TextBox x:Name="Code"  Width="95" Margin="10"
-             VerticalContentAlignment="Center" FontSize="18"/>
-    </StackPanel>
-    <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
-      <Button x:Name="btnUpdate" Content="Update" Click="btnUpdate_Click" Width="120" FontSize="15" HorizontalAlignment="Left" Margin="10"/>
-      <Button x:Name="btnDelete" Content="Delete" Click="btnDelete_Click" Width="120" FontSize="15" HorizontalAlignment="Center" Margin="10"/>
-      <Button x:Name="btnNew" Content="New" Click="btnNew_Click" Width="120" FontSize="15" HorizontalAlignment="Right" Margin="10"/>
-    </StackPanel>
-  </Grid>
+        <DataGrid x:Name="dgItems" Grid.Row="0" Margin="10"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Label x:Name="lblDesc" Content="Description:" Width="110" Margin="10"
+                   VerticalContentAlignment="Center" FontSize="18"/>
+            
+            <TextBox x:Name="txtDesc"  
+                     Width="240" 
+                     Margin="10" 
+                     VerticalContentAlignment="Center" 
+                     FontSize="18"  
+                     materialDesign:HintAssist.Hint="Semi Precious Stone Ring .."/>
+            
+            <Label x:Name="lblCost" 
+                   Content="Cost: $" 
+                   Width="70"
+                   VerticalContentAlignment="Center" 
+                   FontSize="18"/>
+            
+            <TextBox x:Name="txtCost" 
+                     Width="120" 
+                     Margin="10"
+                     VerticalContentAlignment="Center" 
+                     FontSize="18"  
+                     materialDesign:HintAssist.Hint="6.00"/>
+            
+            <Label x:Name="lblCode" 
+                   Content="Code:" 
+                   Width="60"
+                   VerticalContentAlignment="Center" 
+                   FontSize="18"/>
+            
+            <TextBox x:Name="Code"  
+                     Width="95" 
+                     Margin="10"
+                     VerticalContentAlignment="Center" 
+                     FontSize="18" 
+                     materialDesign:HintAssist.Hint="B"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
+            <Button x:Name="btnUpdate" 
+                    Content="Update" 
+                    Click="btnUpdate_Click" 
+                    Width="120" 
+                    FontSize="15" 
+                    HorizontalAlignment="Left" 
+                    Margin="10"/>
+            
+            <Button x:Name="btnDelete" 
+                    Content="Delete" 
+                    Click="btnDelete_Click" 
+                    Width="120" 
+                    FontSize="15" 
+                    HorizontalAlignment="Center" 
+                    Margin="10"/>
+            
+            <Button x:Name="btnNew" 
+                    Content="New" 
+                    Click="btnNew_Click" 
+                    Width="120" 
+                    FontSize="15" 
+                    HorizontalAlignment="Right" 
+                    Margin="10"/>
+        </StackPanel>
+    </Grid>
 </Window>
