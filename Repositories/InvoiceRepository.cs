@@ -1,30 +1,46 @@
-﻿using GroupProject.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Dapper.Contrib.Extensions;
+using GroupProject.Models;
+using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace GroupProject.Repositories
 {
     public class InvoiceRepository
     {
-       
+
+        /// <summary>
+        /// Connection string to the database.
+        /// </summary>
+        private readonly string _connectionString;
+
         // we can use a shared repository to access the data shared by the application
         // sharing code instead of repeating the logic throughout the project using the repository pattern
-        private readonly InvoiceDbContext _invoiceDb;
         /// <summary>
-        /// Setups the DbContext to be used for the life of the repository.
+        /// 
         /// </summary>
         public InvoiceRepository()
         {
-            _invoiceDb = new InvoiceDbContext();
+            _connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data source= " + Directory.GetCurrentDirectory() + "\\Invoice.mdb";
         }
 
         //operations on invoices 
         #region
         public void UpdateInvoice(Invoice invoice)
         {
-            _invoiceDb.Update(invoice);
-            _invoiceDb.SaveChanges();
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var updated = connection.Update(invoice);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodBase.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
         /// <summary>
         /// Deletes the passed in invoice from the database
@@ -32,8 +48,16 @@ namespace GroupProject.Repositories
         /// <param name="invoice"></param>
         public void DeleteInvoice(Invoice invoice)
         {
-            _invoiceDb.Remove(invoice);
-            _invoiceDb.SaveChanges();
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var deleted = connection.Delete(invoice);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
         /// <summary>
         /// Inserts invoice into the database
@@ -41,8 +65,16 @@ namespace GroupProject.Repositories
         /// <param name="invoice"></param>
         public void AddInvoice(Invoice invoice)
         {
-            _invoiceDb.Add(invoice);
-            _invoiceDb.SaveChanges();
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var updated = connection.Insert(invoice);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
         /// <summary>
         /// returns an invoice by it is id if exists if it does not then returns null for you to handle
@@ -51,13 +83,17 @@ namespace GroupProject.Repositories
         /// <returns></returns>
         public Invoice? GetInvoive(int invoiceId)
         {
-            var invoice = _invoiceDb.Invoices
-               .Where(x => x.InvoiceId == invoiceId)
-               .Include(x => x.InvoiceLineItems)
-               .ThenInclude(x => x.ItemDescription)
-               .FirstOrDefault();
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
 
-            return invoice;
+                var invoice = connection.Get<Invoice>(invoiceId);
+                return invoice;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -66,11 +102,17 @@ namespace GroupProject.Repositories
         /// <returns></returns>
         public IList<Invoice> GetAllInvoices()
         {
-            var invoices = _invoiceDb.Invoices
-                .Include(x => x.InvoiceLineItems)
-                .ThenInclude(x => x.ItemDescription)
-                .ToList();
-            return invoices;
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var invoices = connection.GetAll<Invoice>().ToList();
+                return invoices;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
         #endregion
 
@@ -80,32 +122,54 @@ namespace GroupProject.Repositories
         /// Deletes a list of lineitems from the database
         /// </summary>
         /// <param name="invoiceId"></param>
-        public void DeleteLineItems(int invoiceId)
+        public void DeleteLineItem(LineItem lineItem)
         {
-            var lineItems = _invoiceDb.InvoiceLineItems
-                 .Where(x => x.InvoiceId == invoiceId)
-                 .ToList();
-            _invoiceDb.RemoveRange(lineItems);
-            _invoiceDb.SaveChanges();
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var deleted = connection.Delete<LineItem>(lineItem);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
 
         /// <summary>
         /// Deletes line Item from the database
         /// </summary>
         /// <param name="lineItems"></param>
-        public void DeleteLineItems(IList<InvoiceLineItem> lineItems)
+        public void DeleteLineItems(IList<LineItem> lineItems)
         {
-            _invoiceDb.RemoveRange(lineItems);
-            _invoiceDb.SaveChanges();
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var deleted = connection.Delete(lineItems);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
         /// <summary>
         /// Inserts lineItem to the Database
         /// </summary>
         /// <param name="lineItem"></param>
-        public void AddLineItem(InvoiceLineItem lineItem)
+        public long AddLineItem(LineItem lineItem)
         {
-            _invoiceDb.Add(lineItem);
-            _invoiceDb.SaveChanges();
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var insertedId = connection.Insert<LineItem>(lineItem);
+                return insertedId;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
         #endregion
 
@@ -117,17 +181,34 @@ namespace GroupProject.Repositories
         /// <param name="item"></param>
         public void DeleteItem(ItemDescription item)
         {
-            _invoiceDb.Remove(item);
-            _invoiceDb.SaveChanges();
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var deleted = connection.Delete(item);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
         /// <summary>
         /// Inserts passed in item to the database
         /// </summary>
         /// <param name="item"></param>
-        public void AddItem(ItemDescription item)
+        public long AddItem(ItemDescription item)
         {
-            _invoiceDb.Add(item);
-            _invoiceDb.SaveChanges();
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var insertedId = connection.Insert(item);
+                return insertedId;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -136,21 +217,35 @@ namespace GroupProject.Repositories
         /// <param name="item"></param>
         public void UpdateItem(ItemDescription item)
         {
-            _invoiceDb.Update(item);
-            _invoiceDb.SaveChanges();
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var updated = connection.Update(item);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
-        
+
         /// <summary>
         /// Gets a list of all items in the database
         /// </summary>
         /// <returns></returns>
         public IList<ItemDescription> GetAllItems()
         {
-            var items = _invoiceDb.ItemDescriptions
-                .Include(x=> x.InvoiceLineItems)
-                .ThenInclude(x=> x.Invoice)
-                .ToList();
-            return items;
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var items = connection.GetAll<ItemDescription>().ToList();
+                return items;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
         #endregion
     }

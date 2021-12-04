@@ -51,7 +51,7 @@
               Style="{StaticResource MaterialDesignFilledDatePicker}" 
               Margin="10"  
                 />
-            <ComboBox x:Name="ItemsComboBox"  Width="140" Margin="10"/>
+            <ComboBox x:Name="ItemsComboBox" ItemsSource="{Binding Items}" DisplayMemberPath="ItemDesc" Width="140" Margin="10"/>
             <Button Content="Add LineItem" Width="140" Margin="10"/>
         </StackPanel>
         <!--invoice actions-->

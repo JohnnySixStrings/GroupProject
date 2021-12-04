@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Reactive;
+using GroupProject.Repositories;
+using GroupProject.Main;
 
 namespace GroupProject
 {
@@ -25,12 +27,16 @@ namespace GroupProject
     {
         private wndSearch _searchWindow;
         private wndItems _itemsWindow;
+
+        private readonly MainViewModel _mainViewModel;
         public MainWindow()
         {
             _itemsWindow = new wndItems();
             _searchWindow = new wndSearch();
+            _mainViewModel = new MainViewModel();
+            DataContext = _mainViewModel;
+
             InitializeComponent();
-            
             _searchWindow.CancelObservable.Subscribe((x) =>
             {
                 _searchWindow.Hide();
