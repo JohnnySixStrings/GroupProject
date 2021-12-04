@@ -60,5 +60,25 @@ namespace GroupProject
             this.Hide();
             _itemsWindow.Show();
         }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void NewButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AddItemButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

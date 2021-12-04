@@ -1,7 +1,7 @@
 ﻿using Dapper.Contrib.Extensions;
 using System;
 using System.Collections.Generic;
-
+using System.ComponentModel;
 
 namespace GroupProject.Models
 {
@@ -22,9 +22,5 @@ namespace GroupProject.Models
         /// Item Cost
         /// </summary>
         public Decimal Cost { get; set; }
-        /// <summary>
-        /// InvoiceItems that Relate to this enity
-        /// </summary>
-        public IList<LineItem> LineItems { get; set; }
     }
 }

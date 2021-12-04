@@ -1,4 +1,5 @@
 ﻿using Dapper.Contrib.Extensions;
+using System.ComponentModel;
 
 namespace GroupProject.Models
 {
@@ -20,6 +21,7 @@ namespace GroupProject.Models
         /// <summary>
         /// ItemDescription Related to enity
         /// </summary>
+        [Browsable(false)]
         public ItemDescription ItemDescription { get; set; }
         /// <summary>
         /// Invoice related to this entity

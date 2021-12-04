@@ -22,6 +22,6 @@ namespace GroupProject.Models
         /// <summary>
         /// List of Related InvoiceLineItems
         /// </summary>
-        public IList<LineItem> InvoiceLineItems { get; set; }
+        public IList<ItemDescription> LineItems { get; set; }
     }
 }

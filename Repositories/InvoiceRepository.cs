@@ -1,4 +1,5 @@
-﻿using Dapper.Contrib.Extensions;
+﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using GroupProject.Models;
 using System;
 using System.Collections.Generic;
@@ -86,13 +87,36 @@ namespace GroupProject.Repositories
             try
             {
                 using var connection = new OleDbConnection(_connectionString);
+                var dict = new Dictionary<int, Invoice>();
+                //too lazy to learn to the specifics of access.
+                //Never have used it at any job in my 3 years being an engineer.
+                var invoice = connection.Query<Invoice, ItemDescription, Invoice>(
+                    @"SELECT DISTINCT Invoices.InvoiceNum, Invoices.InvoiceDate, Invoices.TotalCost, ItemDesc.ItemCode, ItemDesc.ItemDesc, ItemDesc.Cost
+FROM ItemDesc INNER JOIN (Invoices INNER JOIN LineItems ON Invoices.[InvoiceNum] = LineItems.[InvoiceNum]) ON ItemDesc.[ItemCode] = LineItems.[ItemCode] WHERE Invoices.[InvoiceNum] = @InvoiceNum",
+                    (i, d) =>
+                    {
+                        Invoice retInvoice;
+                        
+                        if(!dict.TryGetValue(i.InvoiceNum, out retInvoice))
+                        {
+                            retInvoice = i;
+                            retInvoice.LineItems = new List<ItemDescription>();
+                            dict.Add(i.InvoiceNum, retInvoice);
+                        }
+                        retInvoice.LineItems.Add(d);
+                        return retInvoice;
+                    }, 
+                    new { InvoiceNum = invoiceId },
+                    splitOn: "ItemCode"
+                    )
+                    .Distinct()
+                    .SingleOrDefault();
 
-                var invoice = connection.Get<Invoice>(invoiceId);
                 return invoice;
             }
             catch (Exception ex)
             {
-                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+                throw new Exception(MethodBase.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
             }
         }
 
