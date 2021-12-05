@@ -29,5 +29,10 @@ namespace GroupProject.Main
             Invoice = _invoiceRepository.GetInvoive(5001);
             SelectedInvoiceItems = new ObservableCollection<ItemDescription>(Invoice?.LineItems);
         }
+
+        public void AddItem(ItemDescription item)
+        {
+            SelectedInvoiceItems.Add(item);
+        }
     }
 }

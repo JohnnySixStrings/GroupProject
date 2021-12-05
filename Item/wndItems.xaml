@@ -23,7 +23,7 @@
 
         <DataGrid x:Name="dgItems" Grid.Row="0" Margin="10"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Label x:Name="lblDesc" Content="Description:" Width="110" Margin="10"
+            <Label x:Name="lblDesc" Content="Description" Width="110" Margin="10"
                    VerticalContentAlignment="Center" FontSize="18"/>
             
             <TextBox x:Name="txtDesc"  
@@ -34,12 +34,13 @@
                      materialDesign:HintAssist.Hint="Semi Precious Stone Ring .."/>
             
             <Label x:Name="lblCost" 
-                   Content="Cost: $" 
+                   Content="Cost" 
                    Width="70"
                    VerticalContentAlignment="Center" 
                    FontSize="18"/>
             
             <TextBox x:Name="txtCost" 
+                     materialDesign:TextFieldAssist.PrefixText="$"
                      Width="120" 
                      Margin="10"
                      VerticalContentAlignment="Center" 
@@ -47,7 +48,7 @@
                      materialDesign:HintAssist.Hint="6.00"/>
             
             <Label x:Name="lblCode" 
-                   Content="Code:" 
+                   Content="Code" 
                    Width="60"
                    VerticalContentAlignment="Center" 
                    FontSize="18"/>

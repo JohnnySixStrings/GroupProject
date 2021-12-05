@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using System.Reactive;
 using GroupProject.Repositories;
 using GroupProject.Main;
+using GroupProject.Models;
 
 namespace GroupProject
 {
@@ -78,7 +79,10 @@ namespace GroupProject
 
         private void AddItemButton_Click(object sender, RoutedEventArgs e)
         {
-
+           if(ItemsComboBox.SelectedItem != null)
+            {
+                _mainViewModel.AddItem((ItemDescription)ItemsComboBox.SelectedItem);
+            }
         }
     }
 }

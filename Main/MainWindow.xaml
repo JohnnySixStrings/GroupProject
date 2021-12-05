@@ -17,8 +17,8 @@
         Title="MainWindow" Height="750" Width="900">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="11*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -26,18 +26,24 @@
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <!--Menu for switching between views-->
-        <Menu IsMainMenu="True" Margin="10" Grid.Row="0" Grid.ColumnSpan="2">
+        <Menu IsMainMenu="True" Grid.Row="0" Grid.ColumnSpan="2"  VerticalAlignment="Center" Background="{DynamicResource PrimaryHueDarkBrush}">
             <MenuItem
+                VerticalAlignment="Center"
+                Margin="10,0,0,0"
+                Foreground="White"
+                Icon="{materialDesign:PackIcon Kind=Menu}">
+                <MenuItem
 
-                Header="Invoice">            
+                    Foreground="White"
+                    Header="Search"
+                    Click="NavigateToSearch"
+                    />
                 <MenuItem
-                Header="Search"
-                Click="NavigateToSearch"
-                />
-                <MenuItem
-                Click="NavigateToItems"
-                Header="Items"
-                />
+
+                    Foreground="White"
+                    Click="NavigateToItems"
+                    Header="Items"
+                    />
             </MenuItem>
         </Menu>
         <!--Data grid for displaying the line items on new or selected invoice also will be used for deleting line items-->
@@ -68,16 +74,16 @@
         <!--Form for Invoice allowing to add items and edit or add invoice organization will changes not sure what I want yet-->
         <StackPanel Grid.Row="1" Grid.Column="1" >
             <StackPanel Orientation="Horizontal">           
-            <TextBox materialDesign:HintAssist.Hint="InvoiceId" Width="140" Margin="10"/>
-            <TextBox materialDesign:HintAssist.Hint="TotalCost" Width="140" IsEnabled="False" Margin="10"/>
+                <TextBox materialDesign:HintAssist.Hint="InvoiceId" Width="140" Margin="10"/>
+                <TextBox materialDesign:HintAssist.Hint="TotalCost" Width="140" IsEnabled="False" Margin="10"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-            <DatePicker
-              Width="140"
-              materialDesign:HintAssist.Hint="Pick Date"
-              Style="{StaticResource MaterialDesignFilledDatePicker}" 
-              Margin="10"  
-                />
+                <DatePicker
+                    Width="140"
+                    materialDesign:HintAssist.Hint="Pick Date"
+                    Style="{StaticResource MaterialDesignFilledDatePicker}" 
+                    Margin="10"  
+                    />
             </StackPanel>
             
         </StackPanel>
