@@ -64,17 +64,17 @@ namespace GroupProject
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-
+            _mainViewModel.DeleteInvoice();
         }
 
         private void NewButton_Click(object sender, RoutedEventArgs e)
         {
-
+            _mainViewModel.NewInvoice();
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-
+            _mainViewModel.SaveInvoice();
         }
 
         private void AddItemButton_Click(object sender, RoutedEventArgs e)

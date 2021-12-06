@@ -47,6 +47,21 @@ namespace GroupProject.Main
             Invoice = new Invoice(Invoice);
         }
 
+        internal void DeleteInvoice()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void NewInvoice()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void SaveInvoice()
+        {
+            throw new NotImplementedException();
+        }
+
         public void AddItem(ItemDescription item)
         {
             SelectedInvoiceItems.Add(item);
