@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GroupProject"
         mc:Ignorable="d"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:main="clr-namespace:GroupProject.Main" d:DataContext="{d:DesignInstance Type=main:MainViewModel}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -73,17 +73,35 @@
         </StackPanel>
         <!--Form for Invoice allowing to add items and edit or add invoice organization will changes not sure what I want yet-->
         <StackPanel Grid.Row="1" Grid.Column="1" >
-            <StackPanel Orientation="Horizontal">           
-                <TextBox materialDesign:HintAssist.Hint="InvoiceId" Width="140" Margin="10"/>
-                <TextBox materialDesign:HintAssist.Hint="TotalCost" Width="140" IsEnabled="False" Margin="10"/>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <StackPanel>
+                    <Label Content="Invoice Number" Margin="5"/>
+                    <TextBox materialDesign:HintAssist.Hint="InvoiceId" 
+                             Text="{Binding Path=Invoice.InvoiceNum}" 
+                             Width="140" 
+                             Margin="5"/>
+                </StackPanel>
+                <StackPanel>
+                    <Label Content="Invoice Total" Margin="5"/>
+                    <TextBox materialDesign:HintAssist.Hint="TotalCost" 
+                             materialDesign:TextFieldAssist.PrefixText="$" 
+                             Text="{Binding Path=Invoice.TotalCost}" 
+                             Width="140" 
+                             IsEnabled="False" 
+                             Margin="5"/>
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <DatePicker
-                    Width="140"
-                    materialDesign:HintAssist.Hint="Pick Date"
-                    Style="{StaticResource MaterialDesignFilledDatePicker}" 
-                    Margin="10"  
-                    />
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <StackPanel>
+                    <Label Content="Invoice Date" Margin="5"/>
+                    <DatePicker
+                        Width="140"
+                        materialDesign:HintAssist.Hint="Pick Date"
+                        SelectedDate="{Binding Path=Invoice.InvoiceDate}"
+                        Style="{StaticResource MaterialDesignFilledDatePicker}" 
+                        Margin="5"  
+                        />
+                </StackPanel>
             </StackPanel>
             
         </StackPanel>

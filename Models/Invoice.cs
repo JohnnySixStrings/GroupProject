@@ -6,6 +6,17 @@ namespace GroupProject.Models
 {
     public class Invoice
     {
+        public Invoice()
+        {
+
+        }
+        public Invoice(Invoice invoice)
+        {
+            InvoiceNum = invoice.InvoiceNum;
+            InvoiceDate = invoice.InvoiceDate;
+            TotalCost = invoice.TotalCost;
+            LineItems = invoice.LineItems;
+        }
         /// <summary>
         /// Invoice Key
         /// </summary>

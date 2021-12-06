@@ -4,15 +4,17 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GroupProject.Main
 {
-    public class MainViewModel : ReactiveObject
+    public class MainViewModel : ReactiveObject , IDisposable
     {
         private readonly InvoiceRepository _invoiceRepository;
+        private readonly List<ItemDescription> _itemList;
         public ObservableCollection<Invoice> Invoices { get; set;}
         public ObservableCollection<ItemDescription> Items { get; set;}
         public ObservableCollection<ItemDescription> SelectedInvoiceItems { get; set;}
@@ -25,14 +27,34 @@ namespace GroupProject.Main
         {
             _invoiceRepository = new InvoiceRepository();
             Invoices = new ObservableCollection<Invoice>(_invoiceRepository.GetAllInvoices());
-            Items = new ObservableCollection<ItemDescription>( _invoiceRepository.GetAllItems());
+            _itemList = _invoiceRepository.GetAllItems().ToList();
+            Items = new ObservableCollection<ItemDescription>(_itemList);
             Invoice = _invoiceRepository.GetInvoive(5001);
             SelectedInvoiceItems = new ObservableCollection<ItemDescription>(Invoice?.LineItems);
+            SelectedInvoiceItems.CollectionChanged += SelectedInvoiceItems_CollectionChanged;
+        }
+
+        private void SelectedInvoiceItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            var items = _itemList.Where(i => !SelectedInvoiceItems.Select(s=>s.ItemCode).ToList().Contains(i.ItemCode)).ToList();
+            Items.Clear();
+            foreach(var item in items)
+            {
+                Items.Add(item);
+            }
+            //update the total in the collection
+            Invoice.TotalCost = SelectedInvoiceItems.Select(i => i.Cost).Sum();
+            Invoice = new Invoice(Invoice);
         }
 
         public void AddItem(ItemDescription item)
         {
             SelectedInvoiceItems.Add(item);
+        }
+
+        public void Dispose()
+        {
+            SelectedInvoiceItems.CollectionChanged -= SelectedInvoiceItems_CollectionChanged;
         }
     }
 }
