@@ -12,7 +12,7 @@ namespace GroupProject.Models
         /// ItemDescription key
         /// </summary>
         [Key]
-        public Char ItemCode { get; set; }
+        public String ItemCode { get; set; }
         /// <summary>
         /// Description of Item
         /// </summary>

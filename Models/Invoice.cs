@@ -25,14 +25,15 @@ namespace GroupProject.Models
         /// <summary>
         /// User Set Invoice date
         /// </summary>
-        public DateTime InvoiceDate { get; set; }
+        public DateTime InvoiceDate { get; set; } = DateTime.Now;
         /// <summary>
         /// TotalCost
         /// </summary>
         public Decimal TotalCost { get; set; }
         /// <summary>
         /// List of Related InvoiceLineItems
-        /// </summary>
+        /// </summary> 
+        [Write(false)]
         public IList<ItemDescription> LineItems { get; set; }
     }
 }

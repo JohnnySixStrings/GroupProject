@@ -6,21 +6,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GroupProject.Main
 {
-    public class MainViewModel : ReactiveObject , IDisposable
+    public class MainViewModel : ReactiveObject, IDisposable
     {
         private readonly InvoiceRepository _invoiceRepository;
         private readonly List<ItemDescription> _itemList;
-        public ObservableCollection<Invoice> Invoices { get; set;}
-        public ObservableCollection<ItemDescription> Items { get; set;}
-        public ObservableCollection<ItemDescription> SelectedInvoiceItems { get; set;}
+        public ObservableCollection<Invoice> Invoices { get; set; }
+        public ObservableCollection<ItemDescription> Items { get; set; }
+        public ObservableCollection<ItemDescription> SelectedInvoiceItems { get; set; }
         private Invoice _invoice;
-        public Invoice Invoice { 
-            get { return _invoice; } 
+        public Invoice Invoice
+        {
+            get { return _invoice; }
             set { this.RaiseAndSetIfChanged(ref _invoice, value); }
         }
         public MainViewModel()
@@ -36,9 +35,9 @@ namespace GroupProject.Main
 
         private void SelectedInvoiceItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            var items = _itemList.Where(i => !SelectedInvoiceItems.Select(s=>s.ItemCode).ToList().Contains(i.ItemCode)).ToList();
+            var items = _itemList.Where(i => !SelectedInvoiceItems.Select(s => s.ItemCode).ToList().Contains(i.ItemCode)).ToList();
             Items.Clear();
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 Items.Add(item);
             }
@@ -47,19 +46,42 @@ namespace GroupProject.Main
             Invoice = new Invoice(Invoice);
         }
 
-        internal void DeleteInvoice()
+        public void DeleteInvoice()
         {
-            throw new NotImplementedException();
+            _invoiceRepository.DeleteInvoice(Invoice);
+            _invoiceRepository.DeleteInvoice()
         }
 
-        internal void NewInvoice()
+        public void NewInvoice()
         {
-            throw new NotImplementedException();
+            Invoice = new Invoice();
+            SelectedInvoiceItems.Clear();
+
         }
 
-        internal void SaveInvoice()
+        public void SaveInvoice()
         {
-            throw new NotImplementedException();
+            if (Invoice.InvoiceNum > 0)
+            {
+                _invoiceRepository.UpdateInvoice(Invoice);
+            }
+            else
+            {
+                var invoiceNum = _invoiceRepository.AddInvoice(Invoice);
+                Invoice = _invoiceRepository.GetInvoive(invoiceNum);
+            }
+
+            _invoiceRepository.DeleteLineItems(Invoice.InvoiceNum);
+            var insert = SelectedInvoiceItems
+                .Select((s, i) => new LineItem()
+                {
+                    InvoiceNum = Invoice.InvoiceNum,
+                    LineItemNumber = i,
+                    ItemCode = s.ItemCode
+                })
+                .ToList();
+            _invoiceRepository.AddInvoices(insert);
+            Invoice = _invoiceRepository.GetInvoive(Invoice.InvoiceNum);
         }
 
         public void AddItem(ItemDescription item)

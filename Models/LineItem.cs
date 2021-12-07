@@ -8,24 +8,26 @@ namespace GroupProject.Models
         /// <summary>
         /// InvoiceLineItem Key
         /// </summary>
-        [Key]
         public int LineItemNumber { get; set; }
         /// <summary>
         /// Invoice Foreign Key
         /// </summary>
+        [ExplicitKey]
         public int InvoiceNum { get; set; }
         /// <summary>
         /// ItemDescription Foreign
         /// </summary>
-        public char ItemCode { get; set; }
+        [ExplicitKey]
+        public string ItemCode { get; set; }
         /// <summary>
         /// ItemDescription Related to enity
         /// </summary>
-        [Browsable(false)]
+        [Write(false)]
         public ItemDescription ItemDescription { get; set; }
         /// <summary>
         /// Invoice related to this entity
         /// </summary>
+        [Write(false)]
         public Invoice Invoice { get; set; }
     }
 }

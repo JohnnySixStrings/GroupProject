@@ -35,8 +35,8 @@ namespace GroupProject.Repositories
             try
             {
                 using var connection = new OleDbConnection(_connectionString);
+                connection.Execute(@"UPDATE Invoices SET TotalCost = @TotalCost WHERE InvoiceNum = @InvoiceNum", new {  invoice.TotalCost, invoice.InvoiceNum });
 
-                var updated = connection.Update(invoice);
             }
             catch (Exception ex)
             {
@@ -47,13 +47,13 @@ namespace GroupProject.Repositories
         /// Deletes the passed in invoice from the database
         /// </summary>
         /// <param name="invoice"></param>
-        public void DeleteInvoice(Invoice invoice)
+        public void DeleteInvoice(int invoiceNum)
         {
             try
             {
                 using var connection = new OleDbConnection(_connectionString);
 
-                var deleted = connection.Delete(invoice);
+                connection.Execute(@"DELETE FROM Invoices WHERE InvoiceNum = @invoiceNum", invoiceNum);
             }
             catch (Exception ex)
             {
@@ -64,19 +64,38 @@ namespace GroupProject.Repositories
         /// Inserts invoice into the database
         /// </summary>
         /// <param name="invoice"></param>
-        public void AddInvoice(Invoice invoice)
+        public int AddInvoice(Invoice invoice)
         {
             try
             {
                 using var connection = new OleDbConnection(_connectionString);
-
-                var updated = connection.Insert(invoice);
+                connection.Open();
+                connection.Execute(@"INSERT INTO Invoices (InvoiceDate, TotalCost) Values (@InvoiceDate, @InvoiceNum)", new { InvoiceDate=invoice.InvoiceDate.ToShortDateString(), invoice.InvoiceNum});
+                var invoiceId = connection.Query<int>(@"SELECT @@IDENTITY;").Single();
+                return invoiceId;
             }
             catch (Exception ex)
             {
                 throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
             }
         }
+
+        public void DeleteLineItems(int invoiceNum)
+        {
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+
+                var inserted = connection.Execute(@"DELETE FROM LineItems WHERE InvoiceNum = @InvoiceNum", new { InvoiceNum = invoiceNum });
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
+
+        }
+
         /// <summary>
         /// returns an invoice by it is id if exists if it does not then returns null for you to handle
         /// </summary>
@@ -91,32 +110,52 @@ namespace GroupProject.Repositories
                 //too lazy to learn to the specifics of access.
                 //Never have used it at any job in my 3 years being an engineer.
                 var invoice = connection.Query<Invoice, ItemDescription, Invoice>(
-                    @"SELECT DISTINCT Invoices.InvoiceNum, Invoices.InvoiceDate, Invoices.TotalCost, ItemDesc.ItemCode, ItemDesc.ItemDesc, ItemDesc.Cost
-FROM ItemDesc INNER JOIN (Invoices INNER JOIN LineItems ON Invoices.[InvoiceNum] = LineItems.[InvoiceNum]) ON ItemDesc.[ItemCode] = LineItems.[ItemCode] WHERE Invoices.[InvoiceNum] = @InvoiceNum",
+                    @"SELECT DISTINCT Invoices.InvoiceNum, Invoices.InvoiceDate, Invoices.TotalCost, ItemDesc.ItemCode, ItemDesc.ItemDesc, ItemDesc.Cost 
+FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.InvoiceNum))
+  LEFT OUTER JOIN ItemDesc ON (ItemDesc.ItemCode = LineItems.ItemCode) WHERE Invoices.[InvoiceNum] = @InvoiceNum",
                     (i, d) =>
                     {
                         Invoice retInvoice;
-                        
-                        if(!dict.TryGetValue(i.InvoiceNum, out retInvoice))
+
+                        if (!dict.TryGetValue(i.InvoiceNum, out retInvoice))
                         {
                             retInvoice = i;
                             retInvoice.LineItems = new List<ItemDescription>();
                             dict.Add(i.InvoiceNum, retInvoice);
                         }
-                        retInvoice.LineItems.Add(d);
+
+                        if (d is not null)
+                            retInvoice.LineItems.Add(d);
+
                         return retInvoice;
-                    }, 
+                    },
                     new { InvoiceNum = invoiceId },
                     splitOn: "ItemCode"
-                    )
-                    .Distinct()
-                    .SingleOrDefault();
+                    );
 
-                return invoice;
+
+                return invoice.Distinct()
+                    .SingleOrDefault();
             }
             catch (Exception ex)
             {
                 throw new Exception(MethodBase.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
+        }
+
+        public void AddInvoices(List<LineItem> insert)
+        {
+            try
+            {
+                using var connection = new OleDbConnection(_connectionString);
+                foreach (var lineItem in insert)
+                {
+                    connection.Execute("INSERT INTO LineItems (InvoiceNum, LineItemNum, ItemCode) Values (@InvoiceNum,@LineItemNumber,@ItemCode)", new {  lineItem.InvoiceNum,  lineItem.LineItemNumber, lineItem.ItemCode });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
             }
         }
 
@@ -141,9 +180,9 @@ FROM ItemDesc INNER JOIN (Invoices INNER JOIN LineItems ON Invoices.[InvoiceNum]
         #endregion
 
         //operations on lineItems
-        #region
+        #region line items operations
         /// <summary>
-        /// Deletes a list of lineitems from the database
+        /// Deletes a lineitem from the database
         /// </summary>
         /// <param name="invoiceId"></param>
         public void DeleteLineItem(LineItem lineItem)
@@ -152,7 +191,7 @@ FROM ItemDesc INNER JOIN (Invoices INNER JOIN LineItems ON Invoices.[InvoiceNum]
             {
                 using var connection = new OleDbConnection(_connectionString);
 
-                var deleted = connection.Delete<LineItem>(lineItem);
+                var deleted = connection.Delete(lineItem);
             }
             catch (Exception ex)
             {
@@ -181,14 +220,13 @@ FROM ItemDesc INNER JOIN (Invoices INNER JOIN LineItems ON Invoices.[InvoiceNum]
         /// Inserts lineItem to the Database
         /// </summary>
         /// <param name="lineItem"></param>
-        public long AddLineItem(LineItem lineItem)
+        public void AddLineItem(LineItem lineItem)
         {
             try
             {
                 using var connection = new OleDbConnection(_connectionString);
+                connection.Execute("INSERT INTO LineItems (InvoiceNum, LineItemNum, ItemCode) Values (@InvoiceNum,@LineItemNumber,@ItemCode)", new {lineItem.InvoiceNum,lineItem.LineItemNumber, lineItem.ItemCode});
 
-                var insertedId = connection.Insert<LineItem>(lineItem);
-                return insertedId;
             }
             catch (Exception ex)
             {
@@ -198,7 +236,7 @@ FROM ItemDesc INNER JOIN (Invoices INNER JOIN LineItems ON Invoices.[InvoiceNum]
         #endregion
 
         //operations on items
-        #region
+        #region ItemDesc operations
         /// <summary>
         /// Deletes passed in item from the database
         /// </summary>
