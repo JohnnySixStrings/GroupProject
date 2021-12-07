@@ -191,7 +191,7 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
             {
                 using var connection = new OleDbConnection(_connectionString);
 
-                var deleted = connection.Delete(lineItem);
+                //var deleted = connection.
             }
             catch (Exception ex)
             {
@@ -209,7 +209,7 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
             {
                 using var connection = new OleDbConnection(_connectionString);
 
-                var deleted = connection.Delete(lineItems);
+                //var deleted = connection
             }
             catch (Exception ex)
             {
@@ -247,7 +247,7 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
             {
                 using var connection = new OleDbConnection(_connectionString);
 
-                var deleted = connection.Delete(item);
+                //var deleted = connection
             }
             catch (Exception ex)
             {
@@ -258,14 +258,14 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
         /// Inserts passed in item to the database
         /// </summary>
         /// <param name="item"></param>
-        public long AddItem(ItemDescription item)
+        public int AddItem(ItemDescription item)
         {
             try
             {
                 using var connection = new OleDbConnection(_connectionString);
 
-                var insertedId = connection.Insert(item);
-                return insertedId;
+                //var insertedId = connection
+                return 1;
             }
             catch (Exception ex)
             {
@@ -283,7 +283,7 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
             {
                 using var connection = new OleDbConnection(_connectionString);
 
-                var updated = connection.Update(item);
+               // var updated = connection
             }
             catch (Exception ex)
             {

@@ -45,7 +45,7 @@
                      Margin="10"
                      VerticalContentAlignment="Center" 
                      FontSize="18"  
-                     materialDesign:HintAssist.Hint="6.00"/>
+                     materialDesign:HintAssist.Hint="$6.00"/>
             
             <Label x:Name="lblCode" 
                    Content="Code" 
