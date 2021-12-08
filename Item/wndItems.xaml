@@ -21,7 +21,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="dgItems" Grid.Row="0" Margin="10"/>
+        <DataGrid x:Name="dgItems" Grid.Row="0" Margin="10" ItemsSource="{Binding Items}" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Item Code" Binding="{Binding ItemCode}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding ItemDesc}" IsReadOnly="True"/>
+                <DataGridTextColumn  Header="Cost" Binding="{Binding Cost}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Label x:Name="lblDesc" Content="Description" Width="110" Margin="10"
                    VerticalContentAlignment="Center" FontSize="18"/>

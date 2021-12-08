@@ -18,14 +18,19 @@ namespace GroupProject.Item
 {
     public partial class wndItems : Window
     {
+        /// <summary>
+        /// An Observable that watches the cancel button click and can be subscirbed to
+        /// </summary>
         public IObservable<EventPattern<RoutedEventArgs>> CancelObservable { get; }
-
+        private clsItemsLogic ItemsLogic;
 
         // clsItemsLogic Logic = new clsItemsLogic();
 
         public wndItems()
         {
             InitializeComponent();
+            ItemsLogic = new clsItemsLogic();
+            DataContext = ItemsLogic;
             CancelObservable = Observable.FromEventPattern<RoutedEventHandler,RoutedEventArgs>( 
                 x => this.ExitButton.Click += x,
                 x => this.ExitButton.Click -= x);

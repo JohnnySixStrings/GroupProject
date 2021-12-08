@@ -16,17 +16,25 @@ using System.Windows.Shapes;
 
 namespace GroupProject.Search
 {
+
     /// <summary>
     /// Interaction logic for wndSearch.xaml
     /// </summary>
     public partial class wndSearch : Window
     {
+        /// <summary>
+        /// Obserable that observes the cancel button click and can be subscribed
+        /// </summary>        
         public IObservable<EventPattern<RoutedEventArgs>> CancelObservable { get; }
-
+        /// <summary>
+        /// The DataContext that handles the logic behind the class
+        /// </summary>
+        private clsSearchLogic SearchLogic { get; set; }
         public wndSearch()
         {
             InitializeComponent();
-
+            SearchLogic = new clsSearchLogic();
+            DataContext = SearchLogic;
             CancelObservable = Observable.FromEventPattern<RoutedEventHandler,RoutedEventArgs>(
                 x => this.btnCancel.Click += x, 
                 x=> this.btnCancel.Click -= x);

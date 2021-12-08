@@ -1,5 +1,8 @@
-﻿using System;
+﻿using GroupProject.Models;
+using GroupProject.Repositories;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,12 +12,17 @@ public class clsItemsLogic
     // clsItemsSQL SQL = new clsItemsSQL();
     // char Code;
 
+    private readonly InvoiceRepository _invoiceRepository;
+    public ObservableCollection<ItemDescription> Items { get; set; }
     /// <summary>
     /// Constructor for clsItemsLogic class
     /// </summary>
     public clsItemsLogic()
 	{
         // Insert constructor code here.
+        _invoiceRepository = new InvoiceRepository();
+        var items = _invoiceRepository.GetAllItems();
+        Items = new ObservableCollection<ItemDescription>(items);
     }
 
     /// <summary>

@@ -13,9 +13,15 @@
             <RowDefinition Height="5*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        
-        <DataGrid x:Name="dgResults" Grid.Row="1" Margin="10"/>
-         <!--moved buttons to the bottom row like you see in web forms-->
+
+        <DataGrid x:Name="dgResults" Grid.Row="1" ItemsSource="{Binding Invoices}" Margin="10" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="InvoiceNum" Binding="{Binding InvoiceNum}"  IsReadOnly="True"/>
+                <DataGridTextColumn Header="InvoiceDate" Binding="{Binding InvoiceDate}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="TotalCost" Binding="{Binding TotalCost}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <!--moved buttons to the bottom row like you see in web forms-->
         <Button x:Name="btnSelect" Content="Select"  Width="120" FontSize="15" Click="btnSelect_Click" Grid.Row="2" HorizontalAlignment="Left" Margin="10"/>
         <Button x:Name="btnCancel" Content="Cancel"   Width="120" FontSize="15" Click="btnCancel_Click" Grid.Row="2" HorizontalAlignment="Right" Margin="10"/>
         <!--put the elements in a stack panel on the first row 0  horizontally-->
