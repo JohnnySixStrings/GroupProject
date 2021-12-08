@@ -1,5 +1,4 @@
 ﻿using Dapper.Contrib.Extensions;
-using System.ComponentModel;
 
 namespace GroupProject.Models
 {

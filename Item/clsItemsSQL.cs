@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GroupProject.Item
+﻿namespace GroupProject.Item
 {
     public class clsItemsSQL
     {
@@ -24,7 +18,7 @@ namespace GroupProject.Item
         /// <param name="iDesc">Item Description</param>
         /// <param name="iCost">Item Cost</param>
         /// <returns>Returns SQL Statement in form of a string</returns>
-        public string SelectItemDesc(char iCode = '\0', string iDesc = "",  string iCost = "")
+        public string SelectItemDesc(char iCode = '\0', string iDesc = "", string iCost = "")
         {
             string query = "SELECT ItemCode, ItemDesc, Cost FROM ItemDesc";
             if (iCode != '\0' && !string.IsNullOrWhiteSpace(iDesc) && !string.IsNullOrWhiteSpace(iCost))
@@ -39,7 +33,7 @@ namespace GroupProject.Item
         /// </summary>
         /// <param name="iCode"></param>
         /// <returns>Returns SQL Statement in form of a string</returns>
-        public string SelectInvoiceID (char iCode)
+        public string SelectInvoiceID(char iCode)
         {
             string query = $"SELECT DISTINCT InvoiceNum FROM LineItems WHERE ItemCode = {iCode}";
             return query;
@@ -65,7 +59,7 @@ namespace GroupProject.Item
         /// <param name="iDesc">Item Description</param>
         /// <param name="iCost">Item Cost</param>
         /// <returns>Returns SQL Statement in form of a string</returns>
-        public string InsertItemDesc (char iCode, string iDesc, string iCost)
+        public string InsertItemDesc(char iCode, string iDesc, string iCost)
         {
             string sSQL = $"INSERT INTO ItemDesc (ItemCode, ItemDesc, Cost) VALUES({iCode}, {iDesc}, {iCost})";
             return sSQL;
@@ -76,7 +70,7 @@ namespace GroupProject.Item
         /// </summary>
         /// <param name="iCode"></param>
         /// <returns>Returns SQL Statement in form of a string</returns>
-        public string DeleteItemDesc (char iCode)
+        public string DeleteItemDesc(char iCode)
         {
             string sSQL = $"DELETE FROM ItemDesc WHERE ItemCode = {iCode}";
             return sSQL;

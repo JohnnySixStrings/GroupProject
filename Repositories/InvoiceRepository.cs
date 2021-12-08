@@ -35,7 +35,7 @@ namespace GroupProject.Repositories
             try
             {
                 using var connection = new OleDbConnection(_connectionString);
-                connection.Execute(@"UPDATE Invoices SET TotalCost = @TotalCost WHERE InvoiceNum = @InvoiceNum", new {  invoice.TotalCost, invoice.InvoiceNum });
+                connection.Execute(@"UPDATE Invoices SET TotalCost = @TotalCost WHERE InvoiceNum = @InvoiceNum", new { invoice.TotalCost, invoice.InvoiceNum });
 
             }
             catch (Exception ex)
@@ -70,7 +70,7 @@ namespace GroupProject.Repositories
             {
                 using var connection = new OleDbConnection(_connectionString);
                 connection.Open();
-                connection.Execute(@"INSERT INTO Invoices (InvoiceDate, TotalCost) Values (@InvoiceDate, @InvoiceNum)", new { InvoiceDate=invoice.InvoiceDate.ToShortDateString(), invoice.InvoiceNum});
+                connection.Execute(@"INSERT INTO Invoices (InvoiceDate, TotalCost) Values (@InvoiceDate, @InvoiceNum)", new { InvoiceDate = invoice.InvoiceDate.ToShortDateString(), invoice.InvoiceNum });
                 var invoiceId = connection.Query<int>(@"SELECT @@IDENTITY;").Single();
                 return invoiceId;
             }
@@ -150,7 +150,7 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
                 using var connection = new OleDbConnection(_connectionString);
                 foreach (var lineItem in insert)
                 {
-                    connection.Execute("INSERT INTO LineItems (InvoiceNum, LineItemNum, ItemCode) Values (@InvoiceNum,@LineItemNumber,@ItemCode)", new {  lineItem.InvoiceNum,  lineItem.LineItemNumber, lineItem.ItemCode });
+                    connection.Execute("INSERT INTO LineItems (InvoiceNum, LineItemNum, ItemCode) Values (@InvoiceNum,@LineItemNumber,@ItemCode)", new { lineItem.InvoiceNum, lineItem.LineItemNumber, lineItem.ItemCode });
                 }
             }
             catch (Exception ex)
@@ -225,7 +225,7 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
             try
             {
                 using var connection = new OleDbConnection(_connectionString);
-                connection.Execute("INSERT INTO LineItems (InvoiceNum, LineItemNum, ItemCode) Values (@InvoiceNum,@LineItemNumber,@ItemCode)", new {lineItem.InvoiceNum,lineItem.LineItemNumber, lineItem.ItemCode});
+                connection.Execute("INSERT INTO LineItems (InvoiceNum, LineItemNum, ItemCode) Values (@InvoiceNum,@LineItemNumber,@ItemCode)", new { lineItem.InvoiceNum, lineItem.LineItemNumber, lineItem.ItemCode });
 
             }
             catch (Exception ex)
@@ -283,7 +283,7 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
             {
                 using var connection = new OleDbConnection(_connectionString);
 
-               // var updated = connection
+                // var updated = connection
             }
             catch (Exception ex)
             {

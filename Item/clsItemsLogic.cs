@@ -1,11 +1,6 @@
 ﻿using GroupProject.Models;
 using GroupProject.Repositories;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public class clsItemsLogic
 {
@@ -18,7 +13,7 @@ public class clsItemsLogic
     /// Constructor for clsItemsLogic class
     /// </summary>
     public clsItemsLogic()
-	{
+    {
         // Insert constructor code here.
         _invoiceRepository = new InvoiceRepository();
         var items = _invoiceRepository.GetAllItems();
@@ -28,7 +23,7 @@ public class clsItemsLogic
     /// <summary>
     /// Deletes selected item from database
     /// </summary>
-    private void DeleteItem ()
+    private void DeleteItem()
     {
         // Checks if the item is on an invoice
         // If not, delete it from the database

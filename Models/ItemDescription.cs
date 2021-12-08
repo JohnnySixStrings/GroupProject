@@ -1,7 +1,5 @@
 ﻿using Dapper.Contrib.Extensions;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace GroupProject.Models
 {
@@ -16,7 +14,7 @@ namespace GroupProject.Models
         /// <summary>
         /// Description of Item
         /// </summary>
-        
+
         public string ItemDesc { get; set; }
         /// <summary>
         /// Item Cost
