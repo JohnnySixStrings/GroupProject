@@ -26,9 +26,9 @@
         <Button x:Name="btnCancel" Content="Cancel"   Width="120" FontSize="15" Click="btnCancel_Click" Grid.Row="2" HorizontalAlignment="Right" Margin="10"/>
         <!--put the elements in a stack panel on the first row 0  horizontally-->
         <StackPanel Orientation="Horizontal">
-            <ComboBox x:Name="cbTotalCharge" Width="120" Margin="10"/>
-            <ComboBox x:Name="cbInvoiceDate" Width="120" Margin="10"/>
-            <ComboBox x:Name="cbInvoiceNum"  Width="120" Margin="10"/>
+            <ComboBox x:Name="cbTotalCharge" Width="120" Margin="10" SelectionChanged="SelectionChanged"/>
+            <ComboBox x:Name="cbInvoiceDate" Width="120" Margin="10" SelectionChanged="SelectionChanged"/>
+            <ComboBox x:Name="cbInvoiceNum"  Width="120" Margin="10" SelectionChanged="SelectionChanged"/>
         </StackPanel>
     </Grid>
 

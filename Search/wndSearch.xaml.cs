@@ -2,6 +2,7 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace GroupProject.Search
 {
@@ -27,6 +28,7 @@ namespace GroupProject.Search
             CancelObservable = Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(
                 x => this.btnCancel.Click += x,
                 x => this.btnCancel.Click -= x);
+            
         }
 
         private void btnSelect_Click(object sender, RoutedEventArgs e)
@@ -39,6 +41,19 @@ namespace GroupProject.Search
         {
             // wndSearch.Close(); this will be used to close the current window and show the MainWindow again. 
             this.Close();
+        }
+
+
+        /// <summary>
+        /// This function will run anytime the user makes a change in selection for any of the comboboxes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            clsSearchLogic sl = new clsSearchLogic();
+
+            dgResults.ItemsSource = sl.getUpdatedData(cbTotalCharge, cbInvoiceDate, cbInvoiceNum);
         }
     }
 }
