@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GroupProject.Models;
+using System;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
@@ -28,7 +30,8 @@ namespace GroupProject.Search
             CancelObservable = Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(
                 x => this.btnCancel.Click += x,
                 x => this.btnCancel.Click -= x);
-            
+
+            LoadComboBoxes();
         }
 
         private void btnSelect_Click(object sender, RoutedEventArgs e)
@@ -54,6 +57,22 @@ namespace GroupProject.Search
             clsSearchLogic sl = new clsSearchLogic();
 
             dgResults.ItemsSource = sl.getUpdatedData(cbTotalCharge, cbInvoiceDate, cbInvoiceNum);
+        }
+
+        private void LoadComboBoxes()
+        {
+            clsSearchLogic sl = new clsSearchLogic();
+
+            List<Invoice> InvoiceList = sl.getInvoices();
+
+            foreach (Invoice iv in InvoiceList)
+            {
+                cbTotalCharge.Items.Add(iv.TotalCost);
+                cbInvoiceDate.Items.Add(iv.InvoiceDate);
+                cbInvoiceNum.Items.Add(iv.InvoiceDate);
+            }
+
+
         }
     }
 }

@@ -123,5 +123,22 @@ namespace GroupProject.Search
             return invoiceList;
         }//End of buildInvoiceList
 
+        public List<Invoice> getInvoices()
+        {
+            clsDataAccess db = new clsDataAccess();
+            clsSearchSQL sql = new clsSearchSQL();
+            DataSet ds = new DataSet();
+
+            int iRet = 0;
+            string sSQL = sql.SelectAll();
+
+            List<Invoice> InvoiceList;
+
+            ds = db.ExecuteSQLStatement(sSQL, ref iRet);
+            InvoiceList = buildInvoiceList(ds, iRet);
+
+            return InvoiceList;
+        }
+
     }
 }
