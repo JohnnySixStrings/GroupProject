@@ -35,6 +35,8 @@ namespace GroupProject.Item
             // Runs clsItemsLogic.UpdateItem
             // If it fails, display error message
             // If it succeeds, update UI and display success message
+            ItemsLogic.UpdateItem(Code.Text, txtDesc.Text, txtCost.Text);
+            dgItems.Items.Refresh();
         }
 
         /// <summary>
@@ -47,6 +49,8 @@ namespace GroupProject.Item
             // Runs clsItemsLogic.DeleteItem
             // If it fails, display error message
             // If it succeeds, update UI and display success message
+            ItemsLogic.DeleteItem(Code.Text);
+            dgItems.Items.Refresh();
         }
 
         /// <summary>
@@ -59,6 +63,8 @@ namespace GroupProject.Item
             // Runs clsItemsLogic.NewItem
             // If it fails, display error message
             // If it succeeds, update UI and display success message
+            ItemsLogic.NewItem(Code.Text, txtDesc.Text, txtCost.Text);
+            dgItems.Items.Refresh();
         }
 
         /// <summary>

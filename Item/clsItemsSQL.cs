@@ -18,13 +18,9 @@
         /// <param name="iDesc">Item Description</param>
         /// <param name="iCost">Item Cost</param>
         /// <returns>Returns SQL Statement in form of a string</returns>
-        public string SelectItemDesc(char iCode = '\0', string iDesc = "", string iCost = "")
+        public string SelectItemDesc(string iCode, string iDesc, string iCost)
         {
-            string query = "SELECT ItemCode, ItemDesc, Cost FROM ItemDesc";
-            if (iCode != '\0' && !string.IsNullOrWhiteSpace(iDesc) && !string.IsNullOrWhiteSpace(iCost))
-            {
-                query += $" WHERE ItemCode = {iCode} AND ItemDesc = {iDesc} AND Cost = {iCost}";
-            }
+            string query = $"SELECT ItemCode, ItemDesc, Cost FROM ItemDesc WHERE ItemCode = '{iCode}' AND ItemDesc = '{iDesc}' AND Cost = {iCost}";
             return query;
         }
 
@@ -33,9 +29,9 @@
         /// </summary>
         /// <param name="iCode"></param>
         /// <returns>Returns SQL Statement in form of a string</returns>
-        public string SelectInvoiceID(char iCode)
+        public string SelectInvoiceID(string iCode)
         {
-            string query = $"SELECT DISTINCT InvoiceNum FROM LineItems WHERE ItemCode = {iCode}";
+            string query = $"SELECT DISTINCT InvoiceNum FROM LineItems WHERE ItemCode = '{iCode}'";
             return query;
         }
 
@@ -46,9 +42,9 @@
         /// <param name="iDesc">Item Description</param>
         /// <param name="iCost">Item Cost</param>
         /// <returns>Returns SQL Statement in form of a string</returns>
-        public string UpdateItemDesc(char iCode, string iDesc, string iCost)
+        public string UpdateItemDesc(string iCode, string iDesc, string iCost)
         {
-            string sSQL = $"UPDATE ItemDesc SET ItemDesc = {iDesc}, Cost = {iCost} WHERE ItemCode = {iCode}";
+            string sSQL = $"UPDATE ItemDesc SET ItemDesc = '{iDesc}', Cost = {iCost} WHERE ItemCode = '{iCode}'";
             return sSQL;
         }
 
@@ -59,9 +55,9 @@
         /// <param name="iDesc">Item Description</param>
         /// <param name="iCost">Item Cost</param>
         /// <returns>Returns SQL Statement in form of a string</returns>
-        public string InsertItemDesc(char iCode, string iDesc, string iCost)
+        public string InsertItemDesc(string iCode, string iDesc, string iCost)
         {
-            string sSQL = $"INSERT INTO ItemDesc (ItemCode, ItemDesc, Cost) VALUES({iCode}, {iDesc}, {iCost})";
+            string sSQL = $"INSERT INTO ItemDesc (ItemCode, ItemDesc, Cost) VALUES('{iCode}', '{iDesc}', {iCost})";
             return sSQL;
         }
 
@@ -70,9 +66,9 @@
         /// </summary>
         /// <param name="iCode"></param>
         /// <returns>Returns SQL Statement in form of a string</returns>
-        public string DeleteItemDesc(char iCode)
+        public string DeleteItemDesc(string iCode)
         {
-            string sSQL = $"DELETE FROM ItemDesc WHERE ItemCode = {iCode}";
+            string sSQL = $"DELETE FROM ItemDesc WHERE ItemCode = '{iCode}'";
             return sSQL;
         }
     }

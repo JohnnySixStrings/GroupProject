@@ -64,7 +64,8 @@
                      Margin="10"
                      VerticalContentAlignment="Center" 
                      FontSize="18" 
-                     materialDesign:HintAssist.Hint="B"/>
+                     materialDesign:HintAssist.Hint="B" 
+                     MaxLength ="1"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
             <Button x:Name="btnUpdate" 
