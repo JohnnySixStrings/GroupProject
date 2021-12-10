@@ -1,6 +1,7 @@
 ﻿using GroupProject.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
@@ -22,6 +23,11 @@ namespace GroupProject.Search
         /// The DataContext that handles the logic behind the class
         /// </summary>
         private clsSearchLogic SearchLogic { get; set; }
+
+
+        /// <summary>
+        /// Constructor for the Search window. 
+        /// </summary>
         public wndSearch()
         {
             InitializeComponent();
@@ -46,6 +52,14 @@ namespace GroupProject.Search
             this.Close();
         }
 
+        private void btnClearSelect_Click(object sender, RoutedEventArgs e)
+        {
+
+            cbInvoiceDate.SelectedItem = null;
+            cbInvoiceNum.SelectedItem = null;
+            cbTotalCharge.SelectedItem = null;
+        }
+
 
         /// <summary>
         /// This function will run anytime the user makes a change in selection for any of the comboboxes
@@ -65,14 +79,27 @@ namespace GroupProject.Search
 
             List<Invoice> InvoiceList = sl.getInvoices();
 
+            List<Decimal> Costs = new List<Decimal>();
+            List<int> IDs = new List<int>();
+            List<DateTime> Dates = new List<DateTime>();
+
+
             foreach (Invoice iv in InvoiceList)
             {
-                cbTotalCharge.Items.Add(iv.TotalCost);
-                cbInvoiceDate.Items.Add(iv.InvoiceDate);
-                cbInvoiceNum.Items.Add(iv.InvoiceDate);
+                Costs.Add(iv.TotalCost);
+                IDs.Add(iv.InvoiceNum);
+                Dates.Add(iv.InvoiceDate);
             }
 
+            //Found this code online to delete duplicates from a list. 
+            Costs = Costs.Distinct().ToList();
+            IDs = IDs.Distinct().ToList();
+            Dates = Dates.Distinct().ToList();
 
-        }
+            cbTotalCharge.ItemsSource = Costs;
+            cbInvoiceDate.ItemsSource = Dates;
+            cbInvoiceNum.ItemsSource = IDs;
+        }//end of LoadComboBoxes()
+
     }
 }

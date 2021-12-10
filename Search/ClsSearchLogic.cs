@@ -31,9 +31,26 @@ namespace GroupProject.Search
             bool isDateNull = cbInvoiceDate.SelectedItem == null;
             bool isNumNull = cbInvoiceNum.SelectedItem == null;
 
-            string sCharge = cbTotalCharge.Text;
-            DateTime dDate = (DateTime)cbInvoiceDate.SelectedItem;
-            string sID = cbInvoiceNum.Text;
+            string sCharge = "";
+            DateTime dDate = new DateTime();
+            string sID = "";
+
+            if (!isChargeNull)
+            {
+                sCharge = cbTotalCharge.SelectedItem.ToString();
+            }
+            if (!isDateNull)
+            {
+                dDate = (DateTime)cbInvoiceDate.SelectedItem;
+            }
+            if (!isNumNull)
+            {
+                sID = cbInvoiceNum.SelectedItem.ToString();
+            }
+
+
+
+
 
 
             string sSQL;
@@ -48,35 +65,35 @@ namespace GroupProject.Search
                 Invoices = buildInvoiceList(ds, iRet);
                 
             }
-            else if (isChargeNull && isDateNull)
+            else if (isChargeNull && isDateNull && !isNumNull)
             {
                 //Filter using InvoiceNum
                 sSQL = sql.SelectInvoiceID(sID);
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
                 Invoices = buildInvoiceList(ds, iRet);
             }
-            else if (isChargeNull && isNumNull)
+            else if (isChargeNull && !isDateNull && isNumNull)
             {
                 //Filter using InvoiceDate
                 sSQL = sql.SelectInvoiceDate(dDate);
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
                 Invoices = buildInvoiceList(ds, iRet);
             }
-            else if (isDateNull && isNumNull)
+            else if (!isChargeNull && isDateNull && isNumNull)
             {
                 //Filter using TotalCharge
                 sSQL = sql.SelectInvoiceCost(sCharge);
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
                 Invoices = buildInvoiceList(ds, iRet);
             }
-            else if (isChargeNull)
+            else if (isChargeNull && !isDateNull && !isNumNull)
             {
                 //Filter using InvoiceDate and InvoiceNum
                 sSQL = sql.SelectIDDate(sID, dDate);
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
                 Invoices = buildInvoiceList(ds, iRet);
             }
-            else if (isDateNull)
+            else if (!isChargeNull && isDateNull && !isNumNull)
             {
                 //Filter using TotalCharge and Invoice Num
                 sSQL = sql.SelectIDCost(sID, sCharge);
@@ -84,7 +101,7 @@ namespace GroupProject.Search
                 Invoices = buildInvoiceList(ds, iRet);
 
             }
-            else if (isNumNull)
+            else if (!isChargeNull && !isDateNull && isNumNull)
             {
                 //Filter using Total Charge and InvoiceDate
                 sSQL = sql.SelectDateCost(dDate, sCharge);

@@ -29,6 +29,7 @@
             <ComboBox x:Name="cbTotalCharge" Width="120" Margin="10" SelectionChanged="SelectionChanged"/>
             <ComboBox x:Name="cbInvoiceDate" Width="120" Margin="10" SelectionChanged="SelectionChanged"/>
             <ComboBox x:Name="cbInvoiceNum"  Width="120" Margin="10" SelectionChanged="SelectionChanged"/>
+            <Button x:Name="btnClearSelect" Content="Clear Selection"  Width="189" FontSize="15" Height="32" Click="btnClearSelect_Click"/>
         </StackPanel>
     </Grid>
 
