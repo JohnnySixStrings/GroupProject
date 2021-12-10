@@ -8,7 +8,6 @@ namespace GroupProject.Models
     {
         public Invoice()
         {
-
         }
         public Invoice(Invoice invoice)
         {
@@ -34,6 +33,6 @@ namespace GroupProject.Models
         /// List of Related InvoiceLineItems
         /// </summary> 
         [Write(false)]
-        public IList<ItemDescription> LineItems { get; set; }
+        public IList<ItemDescription> LineItems { get; set; } = new List<ItemDescription>();
     }
 }

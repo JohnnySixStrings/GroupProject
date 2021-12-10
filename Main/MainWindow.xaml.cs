@@ -4,6 +4,7 @@ using GroupProject.Models;
 using GroupProject.Search;
 using System;
 using System.Windows;
+using System.Windows.Input;
 
 namespace GroupProject
 {
@@ -63,6 +64,8 @@ namespace GroupProject
         private void NewButton_Click(object sender, RoutedEventArgs e)
         {
             _mainViewModel.NewInvoice();
+            InvoiceDatePicker.IsEnabled = true;
+            TotalCostTextBox.IsEnabled = true;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -88,6 +91,19 @@ namespace GroupProject
             CancelDisposableItem?.Dispose();
             CancelDisposableSearch?.Dispose();
             _searchWindow.InvoiceSelected -= HandleInvoiceSelected;
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            var valid = int.TryParse(e.Text, out _);
+            e.Handled = !valid;
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+           InvoiceDatePicker.IsEnabled = true;
+           InvoiceIdTextBox.IsEnabled = true;
+           TotalCostTextBox.IsEnabled = true;
         }
     }
 }

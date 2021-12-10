@@ -13,10 +13,11 @@ namespace GroupProject.Main
     {
         private readonly InvoiceRepository _invoiceRepository;
         private readonly List<ItemDescription> _itemList;
-        public ObservableCollection<Invoice> Invoices { get; set; }
+        public List<Invoice> Invoices { get; set; }
         public ObservableCollection<ItemDescription> Items { get; set; }
         public ObservableCollection<ItemDescription> SelectedInvoiceItems { get; set; }
         private Invoice _invoice;
+        private bool _newInvoice { get; set; }
         public Invoice Invoice
         {
             get { return _invoice; }
@@ -25,22 +26,17 @@ namespace GroupProject.Main
         public MainViewModel()
         {
             _invoiceRepository = new InvoiceRepository();
-            Invoices = new ObservableCollection<Invoice>(_invoiceRepository.GetAllInvoices());
+            Invoices = _invoiceRepository.GetAllInvoices().ToList();
             _itemList = _invoiceRepository.GetAllItems().ToList();
             Items = new ObservableCollection<ItemDescription>(_itemList);
-            Invoice = _invoiceRepository.GetInvoive(5001);
+            _newInvoice = true;
+            Invoice = new Invoice();
             SelectedInvoiceItems = new ObservableCollection<ItemDescription>(Invoice?.LineItems);
             SelectedInvoiceItems.CollectionChanged += SelectedInvoiceItems_CollectionChanged;
         }
 
         private void SelectedInvoiceItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            var items = _itemList.Where(i => !SelectedInvoiceItems.Select(s => s.ItemCode).ToList().Contains(i.ItemCode)).ToList();
-            Items.Clear();
-            foreach (var item in items)
-            {
-                Items.Add(item);
-            }
             //update the total in the collection
             Invoice.TotalCost = SelectedInvoiceItems.Select(i => i.Cost).Sum();
             Invoice = new Invoice(Invoice);
@@ -55,19 +51,26 @@ namespace GroupProject.Main
         {
             Invoice = new Invoice();
             SelectedInvoiceItems.Clear();
+            _newInvoice = true;
 
         }
 
         public void SaveInvoice()
         {
-            if (Invoice.InvoiceNum > 0)
+
+
+            if (_newInvoice)
             {
-                _invoiceRepository.UpdateInvoice(Invoice);
+                if (Invoices.Select(i => i.InvoiceNum).Any(i => i == Invoice.InvoiceNum))
+                {
+                    return;
+                }
+                var invoiceNum = _invoiceRepository.AddInvoice(Invoice);
+                Invoice = _invoiceRepository.GetInvoive(invoiceNum);
             }
             else
             {
-                var invoiceNum = _invoiceRepository.AddInvoice(Invoice);
-                Invoice = _invoiceRepository.GetInvoive(invoiceNum);
+                _invoiceRepository.UpdateInvoice(Invoice);
             }
 
             _invoiceRepository.DeleteLineItems(Invoice.InvoiceNum);
@@ -81,18 +84,34 @@ namespace GroupProject.Main
                 .ToList();
             _invoiceRepository.AddInvoices(insert);
             Invoice = _invoiceRepository.GetInvoive(Invoice.InvoiceNum);
+
+            Invoices = _invoiceRepository.GetAllInvoices().ToList();
         }
 
         public void ChangeInvoice(Invoice source)
         {
-          Invoice = _invoiceRepository.GetInvoive(source.InvoiceNum);
+            Invoice = _invoiceRepository.GetInvoive(source.InvoiceNum);
+            _newInvoice = false;
+            SelectedInvoiceItems.Clear();
+            foreach (var item in Invoice.LineItems)
+            {
+                SelectedInvoiceItems.Add(item);
+            }
         }
 
+        /// <summary>
+        /// Adds an item to the selected to items tied to the invoice.
+        /// </summary>
+        /// <param name="item"></param>
         public void AddItem(ItemDescription item)
         {
             SelectedInvoiceItems.Add(item);
+
         }
 
+        /// <summary>
+        /// Dispose of anything you tell it to dispose at the end of the object
+        /// </summary>
         public void Dispose()
         {
             SelectedInvoiceItems.CollectionChanged -= SelectedInvoiceItems_CollectionChanged;

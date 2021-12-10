@@ -95,7 +95,7 @@ namespace GroupProject.Search
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             clsSearchLogic sl = new clsSearchLogic();
 

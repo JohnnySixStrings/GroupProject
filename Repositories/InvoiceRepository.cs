@@ -101,7 +101,7 @@ namespace GroupProject.Repositories
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <returns></returns>
-        public Invoice? GetInvoive(int invoiceId)
+        public Invoice GetInvoive(int invoiceId)
         {
             try
             {
@@ -150,7 +150,7 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
                 using var connection = new OleDbConnection(_connectionString);
                 foreach (var lineItem in insert)
                 {
-                    connection.Execute("INSERT INTO LineItems (InvoiceNum, LineItemNum, ItemCode) Values (@InvoiceNum,@LineItemNumber,@ItemCode)", new { lineItem.InvoiceNum, lineItem.LineItemNumber, lineItem.ItemCode });
+                   var count = connection.Execute("INSERT INTO LineItems (InvoiceNum, LineItemNum, ItemCode) Values (@InvoiceNum,@LineItemNumber,@ItemCode)", new { lineItem.InvoiceNum, lineItem.LineItemNumber, lineItem.ItemCode });
                 }
             }
             catch (Exception ex)

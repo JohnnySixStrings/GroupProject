@@ -17,8 +17,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="11*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="14*"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*"/>
@@ -37,7 +37,6 @@
                     Click="NavigateToSearch"
                     />
                 <MenuItem
-
                     Foreground="White"
                     Click="NavigateToItems"
                     Header="Items"
@@ -71,49 +70,68 @@
             </Button>
         </StackPanel>
         <!--Form for Invoice allowingedit or add invoice organization will changes not sure what I want yet-->
-        <StackPanel Grid.Row="1" Grid.Column="1" >
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <StackPanel>
-                    <Label Content="Invoice Number" Margin="5"/>
-                    <TextBox materialDesign:HintAssist.Hint="InvoiceId" 
-                             Text="{Binding Path=Invoice.InvoiceNum}" 
-                             Width="140" 
-                             Margin="5"/>
+        <materialDesign:Card  Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
+            <Grid Margin="5"  VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="120"/>
+                    <RowDefinition Height="120"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Row="0">
+                    <StackPanel HorizontalAlignment="Center">
+                        <Label Content="Invoice Number" Margin="5"/>
+                        <TextBox x:Name="InvoiceIdTextBox"
+                                 materialDesign:HintAssist.Hint="InvoiceId"
+                                 IsEnabled="False"
+                                 Text="{Binding Path=Invoice.InvoiceNum}" 
+                                 PreviewTextInput="TextBox_PreviewTextInput"
+                                 Width="140" 
+                                 Margin="5"/>
+                    </StackPanel>
+                    <StackPanel  HorizontalAlignment="Center">
+                        <Label Content="Invoice Total" Margin="5"/>
+                        <TextBox x:Name="TotalCostTextBox"
+                                 materialDesign:HintAssist.Hint="TotalCost" 
+                                 materialDesign:TextFieldAssist.PrefixText="$" 
+                                 Text="{Binding Path=Invoice.TotalCost}" 
+                                 PreviewTextInput="TextBox_PreviewTextInput"
+                                 Width="140" 
+                                 IsEnabled="False" 
+                                 Margin="5"/>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel>
-                    <Label Content="Invoice Total" Margin="5"/>
-                    <TextBox materialDesign:HintAssist.Hint="TotalCost" 
-                             materialDesign:TextFieldAssist.PrefixText="$" 
-                             Text="{Binding Path=Invoice.TotalCost}" 
-                             Width="140" 
-                             IsEnabled="False" 
-                             Margin="5"/>
+                <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="1">
+                    <StackPanel>
+                        <Label Content="Invoice Date" Margin="5"/>
+                        <DatePicker
+                            x:Name="InvoiceDatePicker"
+                            Width="140"
+                            materialDesign:HintAssist.Hint="Pick Date"
+                            SelectedDate="{Binding Path=Invoice.InvoiceDate}"
+                            Style="{StaticResource MaterialDesignFilledDatePicker}" 
+                            Margin="5" 
+                            IsEnabled="False"
+                           
+                            />
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <StackPanel>
-                    <Label Content="Invoice Date" Margin="5"/>
-                    <DatePicker
-                        Width="140"
-                        materialDesign:HintAssist.Hint="Pick Date"
-                        SelectedDate="{Binding Path=Invoice.InvoiceDate}"
-                        Style="{StaticResource MaterialDesignFilledDatePicker}" 
-                        Margin="5"  
-                        />
+                <!--invoice actions-->
+                <StackPanel Grid.Row="3" VerticalAlignment="Bottom">
+                    <Label Content="Invoice Controls" HorizontalAlignment="Center" FontSize="14"/>
+                    <StackPanel 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Center">
+                        <Button Content="Delete" Margin="10" Click="DeleteButton_Click"/>
+                        <Button Content="Save" Margin="10" Click="SaveButton_Click"/>
+                        <Button Content="New" Margin="10" Click="NewButton_Click"/>
+                        <Button Content="Edit" Margin="10" Click="EditButton_Click"/>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-            
-        </StackPanel>
-        <!--invoice actions-->
-        <StackPanel 
-            Grid.Row="2" 
-            Grid.Column="2" 
-            Orientation="Horizontal" 
-            HorizontalAlignment="Center">
-            
-            <Button Content="Delete" Margin="10" Click="DeleteButton_Click"/>
-            <Button Content="Save" Margin="10" Click="SaveButton_Click"/>
-            <Button Content="New" Margin="10" Click="NewButton_Click"/>
-        </StackPanel>
+            </Grid>
+
+        </materialDesign:Card>
+
+
+
     </Grid>
 </Window>
