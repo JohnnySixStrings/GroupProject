@@ -13,16 +13,31 @@ namespace GroupProject
     /// </summary>
     public partial class MainWindow : Window, IDisposable
     {
+        /// <summary>
+        /// Instance of the searchWindow
+        /// </summary>
         private readonly wndSearch _searchWindow;
+        /// <summary>
+        /// Instance of the item window
+        /// </summary>
         private readonly wndItems _itemsWindow;
+        /// <summary>
+        /// Disposable for subscription to the SearchCancelEvent
+        /// </summary>
         private readonly IDisposable CancelDisposableSearch;
+        /// <summary>
+        /// Disposable for subscription to the Item exit/ cancel event
+        /// </summary>
         private readonly IDisposable CancelDisposableItem;
-        private readonly MainViewModel _mainViewModel;
+        /// <summary>
+        /// Business logic class 
+        /// </summary>
+        private readonly clsMainLogic _mainViewModel;
         public MainWindow() 
         {
             _itemsWindow = new wndItems();
             _searchWindow = new wndSearch();
-            _mainViewModel = new MainViewModel();
+            _mainViewModel = new clsMainLogic();
 
 
             DataContext = _mainViewModel;
@@ -38,17 +53,44 @@ namespace GroupProject
             {
                 _itemsWindow.Hide();
                 this.Show();
+                _mainViewModel.UpdateContext();
             });
-            _searchWindow.InvoiceSelected += HandleInvoiceSelected;
 
+            _searchWindow.InvoiceSelected += HandleInvoiceSelected;
+            _searchWindow.Closed += ChildWindow_Closing;
+            _itemsWindow.Closed += ChildWindow_Closing;
         }
 
+        /// <summary>
+        /// Handles the closing of all the windows if one is closed to not leave the program running in an un interactable state
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChildWindow_Closing(object? sender, EventArgs e)
+        {
+            _searchWindow?.Close();
+            _itemsWindow?.Close();
+            this.Close();
+        }
+
+        /// <summary>
+        /// Logic for navigating to the search window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NavigateToSearch(object sender, RoutedEventArgs e)
         {
             this.Hide();
             this._searchWindow.Show();
             _searchWindow.Owner = this;
+
         }
+
+        /// <summary>
+        /// logic for navigating to the items window 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NavigateToItems(object sender, RoutedEventArgs e)
         {
             this.Hide();
@@ -56,11 +98,21 @@ namespace GroupProject
             _itemsWindow.Owner = this;
         }
 
+        /// <summary>
+        /// Deletes the currently selected invoice
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             _mainViewModel.DeleteInvoice();
         }
 
+        /// <summary>
+        /// Creates a new invoice to be saved 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NewButton_Click(object sender, RoutedEventArgs e)
         {
             _mainViewModel.NewInvoice();
@@ -73,6 +125,11 @@ namespace GroupProject
 
         }
 
+        /// <summary>
+        ///  Saves current item wether that is an update or a create
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             _mainViewModel.SaveInvoice();
@@ -84,6 +141,11 @@ namespace GroupProject
             InvoiceDeleteButton.IsEnabled = true;
         }
 
+        /// <summary>
+        ///  Handles the adding of an item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddItemButton_Click(object sender, RoutedEventArgs e)
         {
             if (ItemsComboBox.SelectedItem != null)
@@ -91,25 +153,47 @@ namespace GroupProject
                 _mainViewModel.AddItem((ItemDescription)ItemsComboBox.SelectedItem);
             }
         }
-        private void HandleInvoiceSelected(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// Handles the Invoice selected event on the search window 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HandleInvoiceSelected(object? sender, RoutedEventArgs e)
         {
             _mainViewModel.ChangeInvoice((Invoice)e.Source);
             _searchWindow.Hide();
             Show();
         }
+
+        /// <summary>
+        /// Handling disposing of releasing resources
+        /// </summary>
         public void Dispose()
         {
             CancelDisposableItem?.Dispose();
             CancelDisposableSearch?.Dispose();
             _searchWindow.InvoiceSelected -= HandleInvoiceSelected;
+            _searchWindow.Closing -= ChildWindow_Closing;
+            _itemsWindow.Closing -= ChildWindow_Closing;
         }
 
+        /// <summary>
+        /// Makes sure only numbers are allowed in cost and id field
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             var valid = int.TryParse(e.Text, out _);
             e.Handled = !valid;
         }
 
+        /// <summary>
+        /// Updating state for when the edit button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
            InvoiceDatePicker.IsEnabled = true;

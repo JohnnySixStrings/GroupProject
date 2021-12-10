@@ -9,32 +9,69 @@ using System.Linq;
 
 namespace GroupProject.Main
 {
-    public class MainViewModel : ReactiveObject, IDisposable
+    public class clsMainLogic : ReactiveObject, IDisposable
     {
+        /// <summary>
+        /// repository for getting object out of the database
+        /// </summary>
         private readonly InvoiceRepository _invoiceRepository;
-        private readonly List<ItemDescription> _itemList;
+
+        /// <summary>
+        /// Invoices currently in the database 
+        /// </summary>
         public List<Invoice> Invoices { get; set; }
         public ObservableCollection<ItemDescription> Items { get; set; }
+        /// <summary>
+        /// The Selected invoice's line items
+        /// </summary>
         public ObservableCollection<ItemDescription> SelectedInvoiceItems { get; set; }
         private Invoice _invoice;
-        private bool _newInvoice { get; set; }
+        /// <summary>
+        /// Flag for if the current invoice is new 
+        /// </summary>
+        private bool IsNewInvoice { get; set; }
+        /// <summary>
+        /// Binding target for Invoice
+        /// </summary>
         public Invoice Invoice
         {
             get { return _invoice; }
             set { this.RaiseAndSetIfChanged(ref _invoice, value); }
         }
-        public MainViewModel()
+        /// <summary>
+        /// Constructor for setting initial state
+        /// </summary>
+        public clsMainLogic()
         {
             _invoiceRepository = new InvoiceRepository();
             Invoices = _invoiceRepository.GetAllInvoices().ToList();
-            _itemList = _invoiceRepository.GetAllItems().ToList();
-            Items = new ObservableCollection<ItemDescription>(_itemList);
-            _newInvoice = true;
+            var items = _invoiceRepository.GetAllItems().ToList();
+            Items = new ObservableCollection<ItemDescription>(items);
+            IsNewInvoice = true;
             Invoice = new Invoice();
             SelectedInvoiceItems = new ObservableCollection<ItemDescription>(Invoice?.LineItems);
             SelectedInvoiceItems.CollectionChanged += SelectedInvoiceItems_CollectionChanged;
         }
 
+        /// <summary>
+        /// Upddates the data contained.
+        /// </summary>
+        public void UpdateContext()
+        {
+            Invoices = _invoiceRepository.GetAllInvoices().ToList();
+            var items = _invoiceRepository.GetAllItems().ToList();
+            Items.Clear();
+            foreach (var item in items)
+            {
+                Items.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// Whenever an item is removed or added to the collection it runs this funcion update the total cost and refresh the state of the invoice
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SelectedInvoiceItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             //update the total in the collection
@@ -42,24 +79,31 @@ namespace GroupProject.Main
             Invoice = new Invoice(Invoice);
         }
 
+        /// <summary>
+        /// Deleted the invoice and it's related items
+        /// </summary>
         public void DeleteInvoice()
         {
             _invoiceRepository.DeleteInvoice(Invoice.InvoiceNum);
+       
         }
 
+        /// <summary>
+        /// Set the invoice to a blank invoice to be created
+        /// </summary>
         public void NewInvoice()
         {
             Invoice = new Invoice();
             SelectedInvoiceItems.Clear();
-            _newInvoice = true;
-
+            IsNewInvoice = true;
         }
 
+        /// <summary>
+        /// Handles the logic for saving an invoice and its data
+        /// </summary>
         public void SaveInvoice()
         {
-
-
-            if (_newInvoice)
+            if (IsNewInvoice)
             {
                 if (Invoices.Select(i => i.InvoiceNum).Any(i => i == Invoice.InvoiceNum))
                 {
@@ -87,11 +131,14 @@ namespace GroupProject.Main
             Invoices = _invoiceRepository.GetAllInvoices().ToList();
             Invoice = _invoiceRepository.GetInvoive(Invoice.InvoiceNum);
         }
-
+        /// <summary>
+        /// Switches the state to the passed in invoice
+        /// </summary>
+        /// <param name="source"></param>
         public void ChangeInvoice(Invoice source)
         {
             Invoice = _invoiceRepository.GetInvoive(source.InvoiceNum);
-            _newInvoice = false;
+            IsNewInvoice = false;
             SelectedInvoiceItems.Clear();
             foreach (var item in Invoice.LineItems)
             {
@@ -110,7 +157,7 @@ namespace GroupProject.Main
         }
 
         /// <summary>
-        /// Dispose of anything you tell it to dispose at the end of the object
+        /// Dispose of listners or objects at the end of the object.
         /// </summary>
         public void Dispose()
         {

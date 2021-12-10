@@ -91,6 +91,7 @@ public class clsItemsLogic
                     return;
                 }
             }
+            RefreshItems();
         }
         catch (Exception ex)
         {
@@ -119,6 +120,7 @@ public class clsItemsLogic
                     return;
                 }
             }
+            RefreshItems();
         }
         catch (Exception ex)
         {
@@ -143,10 +145,24 @@ public class clsItemsLogic
             ID.ItemDesc = iDesc;
             ID.ItemCode = iCode;
             Items.Add(ID);
+            RefreshItems();
         }
         catch (Exception ex)
         {
             throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Refreshes the item list from the database
+    /// </summary>
+    private void RefreshItems()
+    {
+        var items = _invoiceRepository.GetAllItems();
+        Items.Clear();
+        foreach (var item in items)
+        {
+            Items.Add(item);
         }
     }
 }

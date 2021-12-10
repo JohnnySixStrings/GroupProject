@@ -33,6 +33,7 @@
                    VerticalContentAlignment="Center" FontSize="18"/>
             
             <TextBox x:Name="txtDesc"  
+                     Text="{Binding ElementName=dgItems, Path=SelectedItem.ItemDesc}"
                      Width="240" 
                      Margin="10" 
                      VerticalContentAlignment="Center" 
@@ -45,7 +46,8 @@
                    VerticalContentAlignment="Center" 
                    FontSize="18"/>
             
-            <TextBox x:Name="txtCost" 
+            <TextBox x:Name="txtCost"
+                     Text="{Binding ElementName=dgItems, Path=SelectedItem.Cost}"
                      materialDesign:TextFieldAssist.PrefixText="$"
                      Width="120" 
                      Margin="10"
@@ -59,7 +61,8 @@
                    VerticalContentAlignment="Center" 
                    FontSize="18"/>
             
-            <TextBox x:Name="Code"  
+            <TextBox x:Name="Code" 
+                     Text="{Binding ElementName=dgItems, Path=SelectedItem.ItemCode}"
                      Width="95" 
                      Margin="10"
                      VerticalContentAlignment="Center" 

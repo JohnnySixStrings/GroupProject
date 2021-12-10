@@ -54,6 +54,8 @@ namespace GroupProject.Repositories
                 using var connection = new OleDbConnection(_connectionString);
 
                 connection.Execute(@"DELETE FROM Invoices WHERE InvoiceNum = @invoiceNum", invoiceNum);
+                connection.Execute(@"DELETE FROM LineItems WHERE InvoiceNum = @invoiceNum", invoiceNum );
+
             }
             catch (Exception ex)
             {
@@ -80,6 +82,11 @@ namespace GroupProject.Repositories
             }
         }
 
+        /// <summary>
+        /// Deletes line items connected to an invoice
+        /// </summary>
+        /// <param name="invoiceNum"></param>
+        /// <exception cref="Exception"></exception>
         public void DeleteLineItems(int invoiceNum)
         {
             try
@@ -143,6 +150,11 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
             }
         }
 
+        /// <summary>
+        /// Adds Invoices into the database
+        /// </summary>
+        /// <param name="insert"></param>
+        /// <exception cref="Exception"></exception>
         public void AddInvoices(List<LineItem> insert)
         {
             try
