@@ -70,7 +70,7 @@ namespace GroupProject.Search
                 sSQL = sql.SelectAll();
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
                 Invoices = buildInvoiceList(ds, iRet);
-                
+
             }
             else if (isChargeNull && isDateNull && !isNumNull)
             {

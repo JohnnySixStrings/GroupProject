@@ -14,7 +14,6 @@ namespace GroupProject.Models
         /// <summary>
         /// Description of Item
         /// </summary>
-
         public string ItemDesc { get; set; }
         /// <summary>
         /// Item Cost

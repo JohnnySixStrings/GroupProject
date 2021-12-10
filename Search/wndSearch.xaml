@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GroupProject.Search"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         mc:Ignorable="d"
         Title="Search" Height="450" Width="800">
     <Grid>
@@ -19,10 +20,19 @@
                 <DataGridTextColumn Header="InvoiceNum" Binding="{Binding InvoiceNum}"  IsReadOnly="True"/>
                 <DataGridTextColumn Header="InvoiceDate" Binding="{Binding InvoiceDate}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="TotalCost" Binding="{Binding TotalCost}" IsReadOnly="True"/>
+                <DataGridTemplateColumn  Header="Action" IsReadOnly="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button x:Name="EditInvoiceButton" Click="EditInvoiceButton_Click"  Margin="3" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Opacity="1">
+                                <materialDesign:PackIcon Kind="Edit"  Height="16" Width="16"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
         <!--moved buttons to the bottom row like you see in web forms-->
-        <Button x:Name="btnSelect" Content="Select"  Width="120" FontSize="15" Click="btnSelect_Click" Grid.Row="2" HorizontalAlignment="Left" Margin="10"/>
+        <!--<Button x:Name="btnSelect" Content="Select"  Width="120" FontSize="15" Click="btnSelect_Click" Grid.Row="2" HorizontalAlignment="Left" Margin="10"/>-->
         <Button x:Name="btnCancel" Content="Cancel"   Width="120" FontSize="15" Click="btnCancel_Click" Grid.Row="2" HorizontalAlignment="Right" Margin="10"/>
         <!--put the elements in a stack panel on the first row 0  horizontally-->
         <StackPanel Orientation="Horizontal">

@@ -21,6 +21,8 @@ namespace GroupProject
             _itemsWindow = new wndItems();
             _searchWindow = new wndSearch();
             _mainViewModel = new MainViewModel();
+
+
             DataContext = _mainViewModel;
 
             InitializeComponent();
@@ -41,11 +43,13 @@ namespace GroupProject
         {
             this.Hide();
             this._searchWindow.Show();
+            _searchWindow.Owner = this;
         }
         private void NavigateToItems(object sender, RoutedEventArgs e)
         {
             this.Hide();
             _itemsWindow.Show();
+            _itemsWindow.Owner = this;
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
