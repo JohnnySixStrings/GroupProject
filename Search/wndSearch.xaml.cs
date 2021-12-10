@@ -24,9 +24,13 @@ namespace GroupProject.Search
         /// </summary>
         private clsSearchLogic SearchLogic { get; set; }
 
+        /// <summary>
+        /// Boolean used to flag if the program is clearing all the comboboxes to prevent lag and increase efficiency.
+        /// </summary>
+        private bool bisClearingSelection = false;
 
         /// <summary>
-        /// Constructor for the Search window. 
+        /// Constructor for the Search window. Loads in the Combo boxes with unique items.
         /// </summary>
         public wndSearch()
         {
@@ -40,23 +44,43 @@ namespace GroupProject.Search
             LoadComboBoxes();
         }
 
+
+        /// <summary>
+        /// Runs when the user clicks the "Select" button. Sends the selected invoice back to the main window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSelect_Click(object sender, RoutedEventArgs e)
         {
             //The selected invoice will be sent back to the main window. This will be sent by using a setter or function of some type.
             
         }
 
+
+        /// <summary>
+        /// Runs when the user clicks the "Cancel" button. Closes the window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            // wndSearch.Close(); this will be used to close the current window and show the MainWindow again. 
             this.Close();
         }
 
+
+        /// <summary>
+        /// Runs when the user clicks the "Clear Selection" button. clears all selections in all the comboboxes. refreshes dataGrid automatically
+        /// I have an bisClearingSelection variable that will override the SelectionChanged() method, so that the method
+        /// doesn't run 3 times (each time a ComboBox is set to null), only the last time, when all are null.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnClearSelect_Click(object sender, RoutedEventArgs e)
         {
-
+            bisClearingSelection = true;
             cbInvoiceDate.SelectedItem = null;
             cbInvoiceNum.SelectedItem = null;
+            bisClearingSelection = false;
             cbTotalCharge.SelectedItem = null;
         }
 
@@ -73,6 +97,10 @@ namespace GroupProject.Search
             dgResults.ItemsSource = sl.getUpdatedData(cbTotalCharge, cbInvoiceDate, cbInvoiceNum);
         }
 
+
+        /// <summary>
+        /// Function to load all the comboBoxes with unique values at the beginning of this program/window.
+        /// </summary>
         private void LoadComboBoxes()
         {
             clsSearchLogic sl = new clsSearchLogic();
@@ -99,6 +127,7 @@ namespace GroupProject.Search
             cbTotalCharge.ItemsSource = Costs;
             cbInvoiceDate.ItemsSource = Dates;
             cbInvoiceNum.ItemsSource = IDs;
+
         }//end of LoadComboBoxes()
 
     }
