@@ -54,7 +54,7 @@ namespace GroupProject.Search
         private void btnSelect_Click(object sender, RoutedEventArgs e)
         {
             //The selected invoice will be sent back to the main window. This will be sent by using a setter or function of some type.
-            
+
         }
 
 
@@ -133,7 +133,7 @@ namespace GroupProject.Search
 
         private void EditInvoiceButton_Click(object sender, RoutedEventArgs e)
         {
-            if(sender is Button && sender is not null)
+            if (sender is Button && sender is not null)
             {
                 SelectedInvoice = (Invoice)((FrameworkElement)sender).DataContext;
                 this.Hide();

@@ -4,9 +4,9 @@ using System.Data.OleDb;
 using System.IO;
 using System.Reflection;
 
-    /// <summary>
-    /// Class used to access the database.
-    /// </summary>
+/// <summary>
+/// Class used to access the database.
+/// </summary>
 public class clsDataAccess
 {
     /// <summary>
@@ -18,7 +18,7 @@ public class clsDataAccess
     /// Constructor that sets the connection string to the database
     /// </summary>
 	public clsDataAccess()
-	{
+    {
         sConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data source= " + Directory.GetCurrentDirectory() + "\\Invoice.mdb";
     }
 
@@ -60,12 +60,12 @@ public class clsDataAccess
 
             //return the DataSet
             return ds;
-		}
-		catch (Exception ex)
-		{
+        }
+        catch (Exception ex)
+        {
             throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
-		}
-	}
+        }
+    }
 
     /// <summary>
     /// This method takes an SQL statment that is passed in and executes it.  The resulting single 
@@ -74,9 +74,9 @@ public class clsDataAccess
     /// <param name="sSQL">The SQL statement to be executed.</param>
     /// <returns>Returns a string from the scalar SQL statement.</returns>
 	public string ExecuteScalarSQL(string sSQL)
-	{
-		try
-		{
+    {
+        try
+        {
             //Holds the return value
             object obj;
 
@@ -107,22 +107,22 @@ public class clsDataAccess
                 //Return the value
                 return obj.ToString();
             }
-		}
-		catch (Exception ex)
-		{
+        }
+        catch (Exception ex)
+        {
             throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
-		}
-	}
+        }
+    }
 
-	/// <summary>
+    /// <summary>
     /// This method takes an SQL statment that is a non query and executes it.
     /// </summary>
     /// <param name="sSQL">The SQL statement to be executed.</param>
     /// <returns>Returns the number of rows affected by the SQL statement.</returns>
-	public int ExecuteNonQuery(string sSQL)
-	{
-		try
-		{
+    public int ExecuteNonQuery(string sSQL)
+    {
+        try
+        {
             //Number of rows affected
             int iNumRows;
 
@@ -142,10 +142,10 @@ public class clsDataAccess
 
             //return the number of rows affected
             return iNumRows;
-		}
-		catch (Exception ex)
-		{
+        }
+        catch (Exception ex)
+        {
             throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
-		}
-	}
+        }
+    }
 }

@@ -22,7 +22,7 @@ namespace GroupProject.Main
             get { return _invoice; }
             set { this.RaiseAndSetIfChanged(ref _invoice, value); }
         }
-        public  MainViewModel()
+        public MainViewModel()
         {
             _invoiceRepository = new InvoiceRepository();
             Invoices = new ObservableCollection<Invoice>(_invoiceRepository.GetAllInvoices());
