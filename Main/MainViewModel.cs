@@ -83,9 +83,9 @@ namespace GroupProject.Main
                 })
                 .ToList();
             _invoiceRepository.AddInvoices(insert);
-            Invoice = _invoiceRepository.GetInvoive(Invoice.InvoiceNum);
 
             Invoices = _invoiceRepository.GetAllInvoices().ToList();
+            Invoice = _invoiceRepository.GetInvoive(Invoice.InvoiceNum);
         }
 
         public void ChangeInvoice(Invoice source)

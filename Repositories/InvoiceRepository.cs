@@ -35,7 +35,7 @@ namespace GroupProject.Repositories
             try
             {
                 using var connection = new OleDbConnection(_connectionString);
-                connection.Execute(@"UPDATE Invoices SET TotalCost = @TotalCost WHERE InvoiceNum = @InvoiceNum", new { invoice.TotalCost, invoice.InvoiceNum });
+                var count = connection.Execute(@"UPDATE Invoices SET TotalCost = @TotalCost WHERE InvoiceNum = @InvoiceNum", new { invoice.TotalCost, invoice.InvoiceNum });
 
             }
             catch (Exception ex)
@@ -110,7 +110,7 @@ namespace GroupProject.Repositories
                 //too lazy to learn to the specifics of access.
                 //Never have used it at any job in my 3 years being an engineer.
                 var invoice = connection.Query<Invoice, ItemDescription, Invoice>(
-                    @"SELECT DISTINCT Invoices.InvoiceNum, Invoices.InvoiceDate, Invoices.TotalCost, ItemDesc.ItemCode, ItemDesc.ItemDesc, ItemDesc.Cost 
+                    @"SELECT Invoices.InvoiceNum, Invoices.InvoiceDate, Invoices.TotalCost, ItemDesc.ItemCode, ItemDesc.ItemDesc, ItemDesc.Cost 
 FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.InvoiceNum))
   LEFT OUTER JOIN ItemDesc ON (ItemDesc.ItemCode = LineItems.ItemCode) WHERE Invoices.[InvoiceNum] = @InvoiceNum",
                     (i, d) =>
@@ -135,7 +135,7 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
 
 
                 return invoice.Distinct()
-                    .SingleOrDefault();
+                    .FirstOrDefault();
             }
             catch (Exception ex)
             {

@@ -65,12 +65,23 @@ namespace GroupProject
         {
             _mainViewModel.NewInvoice();
             InvoiceDatePicker.IsEnabled = true;
+            InvoiceIdTextBox.IsEnabled = false;
             TotalCostTextBox.IsEnabled = true;
+            LineItemsDataGrid.IsEnabled = true;
+            AddItemButton.IsEnabled = true;
+            InvoiceDeleteButton.IsEnabled = false;
+
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             _mainViewModel.SaveInvoice();
+            InvoiceDatePicker.IsEnabled = false;
+            InvoiceIdTextBox.IsEnabled = false;
+            TotalCostTextBox.IsEnabled = false;
+            LineItemsDataGrid.IsEnabled = false;
+            AddItemButton.IsEnabled = false;
+            InvoiceDeleteButton.IsEnabled = true;
         }
 
         private void AddItemButton_Click(object sender, RoutedEventArgs e)
@@ -104,6 +115,9 @@ namespace GroupProject
            InvoiceDatePicker.IsEnabled = true;
            InvoiceIdTextBox.IsEnabled = true;
            TotalCostTextBox.IsEnabled = true;
+           LineItemsDataGrid.IsEnabled = true;
+           AddItemButton.IsEnabled = true;
+           InvoiceDeleteButton.IsEnabled = true;
         }
     }
 }

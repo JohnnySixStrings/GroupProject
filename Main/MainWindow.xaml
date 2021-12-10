@@ -44,7 +44,7 @@
             </MenuItem>
         </Menu>
         <!--Data grid for displaying the line items on new or selected invoice also will be used for deleting line items-->
-        <DataGrid x:Name="LineItemDataGrid" Grid.Row="1" ItemsSource="{Binding SelectedInvoiceItems}" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="False" Grid.Column="0" SelectionMode="Single" SelectionUnit="FullRow" >
+        <DataGrid x:Name="LineItemsDataGrid" IsEnabled="False" Grid.Row="1" ItemsSource="{Binding SelectedInvoiceItems}" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="False" Grid.Column="0" SelectionMode="Single" SelectionUnit="FullRow" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ItemCode" Binding="{Binding ItemCode}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Description" Binding="{Binding ItemDesc}" IsReadOnly="True"/>
@@ -64,7 +64,7 @@
         <!--section for adding invoices-->
         <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center"  VerticalAlignment="Center" Grid.Row="2" Grid.Column="0">
             <ComboBox x:Name="ItemsComboBox" ItemsSource="{Binding Items}" DisplayMemberPath="ItemDesc" Width="140" Margin="10"/>
-            <Button  Width="35" Height="35" Click="AddItemButton_Click" Margin="10"  Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" >
+            <Button x:Name="AddItemButton" IsEnabled="False" Width="35" Height="35" Click="AddItemButton_Click" Margin="10"  Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" >
                 <materialDesign:PackIcon Kind="Add"  Height="16" Width="16"/>
                 
             </Button>
@@ -121,7 +121,7 @@
                     <StackPanel 
                         Orientation="Horizontal" 
                         HorizontalAlignment="Center">
-                        <Button Content="Delete" Margin="10" Click="DeleteButton_Click"/>
+                        <Button x:Name="InvoiceDeleteButton" IsEnabled="False" Content="Delete" Margin="10" Click="DeleteButton_Click"/>
                         <Button Content="Save" Margin="10" Click="SaveButton_Click"/>
                         <Button Content="New" Margin="10" Click="NewButton_Click"/>
                         <Button Content="Edit" Margin="10" Click="EditButton_Click"/>
