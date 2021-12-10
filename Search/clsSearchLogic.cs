@@ -21,6 +21,15 @@ namespace GroupProject.Search
         //This class will have a local variable for InvoiceID that will be sent over to the other windows with a function like a setter.
         //private int iInvoiceID;
 
+
+        /// <summary>
+        /// Function that runs whenever a ComboBox's selection is changed. Checks which ones are null, gets the proper sql string,
+        /// executes data, and sends back a list of Invoices.
+        /// </summary>
+        /// <param name="cbTotalCharge">ComboBox of the Total Charge</param>
+        /// <param name="cbInvoiceDate">ComboBox of the Invoice Date</param>
+        /// <param name="cbInvoiceNum">ComboBox of the Invoice ID</param>
+        /// <returns>returns a list of Invoices</returns>
         public List<Invoice> getUpdatedData(ComboBox cbTotalCharge, ComboBox cbInvoiceDate, ComboBox cbInvoiceNum)
         {
             clsDataAccess db = new clsDataAccess();
@@ -35,6 +44,7 @@ namespace GroupProject.Search
             DateTime dDate = new DateTime();
             string sID = "";
 
+            //used to set the variables to the selection if that selection isn't null.
             if (!isChargeNull)
             {
                 sCharge = cbTotalCharge.SelectedItem.ToString();
@@ -49,14 +59,11 @@ namespace GroupProject.Search
             }
 
 
-
-
-
-
             string sSQL;
             List<Invoice> Invoices;
             int iRet = 0;
 
+            //Check all possible outcomes and execute the proper sql
             if (isChargeNull && isDateNull && isNumNull)
             {
                 //All are null, display everything
@@ -121,6 +128,13 @@ namespace GroupProject.Search
 
         }//end of GetUpdatedData()
 
+
+        /// <summary>
+        /// Function that builds a list of Invoices from the dataSet that comes from a sql query
+        /// </summary>
+        /// <param name="ds">The dataset from the updated data</param>
+        /// <param name="iRet">an int that shows how many rows there are</param>
+        /// <returns>returns a list of invoices</returns>
         private List<Invoice> buildInvoiceList(DataSet ds, int iRet)
         {
             List<Invoice> invoiceList = new List<Invoice>();
@@ -140,6 +154,11 @@ namespace GroupProject.Search
             return invoiceList;
         }//End of buildInvoiceList
 
+
+        /// <summary>
+        /// Function that returns a list of invoices, used at the beginning of the program to fill the comboboxes
+        /// </summary>
+        /// <returns>returns list of Invoices</returns>
         public List<Invoice> getInvoices()
         {
             clsDataAccess db = new clsDataAccess();
