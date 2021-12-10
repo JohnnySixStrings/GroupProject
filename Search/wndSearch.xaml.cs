@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -36,14 +37,22 @@ namespace GroupProject.Search
         /// </summary>
         public wndSearch()
         {
-            InitializeComponent();
-            SearchLogic = new clsSearchLogic();
-            DataContext = SearchLogic;
-            CancelObservable = Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(
-                x => this.btnCancel.Click += x,
-                x => this.btnCancel.Click -= x);
+            try
+            {
+                InitializeComponent();
+                SearchLogic = new clsSearchLogic();
+                DataContext = SearchLogic;
+                CancelObservable = Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(
+                    x => this.btnCancel.Click += x,
+                    x => this.btnCancel.Click -= x);
 
-            LoadComboBoxes();
+                LoadComboBoxes();
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name,
+                    MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
         }
 
 
@@ -54,10 +63,18 @@ namespace GroupProject.Search
         /// <param name="e"></param>
         private void btnSelect_Click(object sender, RoutedEventArgs e)
         {
-            if(sender is not null && dgResults.SelectedItem is not null)
+            try
             {
-                e.Source = dgResults.SelectedItem;
-                InvoiceSelected?.Invoke(this, e);
+                if (sender is not null && dgResults.SelectedItem is not null)
+                {
+                    e.Source = dgResults.SelectedItem;
+                    InvoiceSelected?.Invoke(this, e);
+                }
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name,
+                    MethodInfo.GetCurrentMethod().Name, ex.Message);
             }
         }
 
@@ -69,7 +86,15 @@ namespace GroupProject.Search
         /// <param name="e"></param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            try
+            {
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name,
+                    MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
         }
 
 
@@ -82,11 +107,19 @@ namespace GroupProject.Search
         /// <param name="e"></param>
         private void btnClearSelect_Click(object sender, RoutedEventArgs e)
         {
-            bisClearingSelection = true;
-            cbInvoiceDate.SelectedItem = null;
-            cbInvoiceNum.SelectedItem = null;
-            bisClearingSelection = false;
-            cbTotalCharge.SelectedItem = null;
+            try
+            {
+                bisClearingSelection = true;
+                cbInvoiceDate.SelectedItem = null;
+                cbInvoiceNum.SelectedItem = null;
+                bisClearingSelection = false;
+                cbTotalCharge.SelectedItem = null;
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name,
+                    MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
         }
 
 
@@ -97,9 +130,17 @@ namespace GroupProject.Search
         /// <param name="e"></param>
         private void SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            clsSearchLogic sl = new clsSearchLogic();
+            try
+            {
+                clsSearchLogic sl = new clsSearchLogic();
 
-            dgResults.ItemsSource = sl.getUpdatedData(cbTotalCharge, cbInvoiceDate, cbInvoiceNum);
+                dgResults.ItemsSource = sl.getUpdatedData(cbTotalCharge, cbInvoiceDate, cbInvoiceNum);
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name,
+                    MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
         }
 
 
@@ -108,41 +149,57 @@ namespace GroupProject.Search
         /// </summary>
         private void LoadComboBoxes()
         {
-            clsSearchLogic sl = new clsSearchLogic();
-
-            List<Invoice> InvoiceList = sl.getInvoices();
-
-            List<Decimal> Costs = new List<Decimal>();
-            List<int> IDs = new List<int>();
-            List<DateTime> Dates = new List<DateTime>();
-
-
-            foreach (Invoice iv in InvoiceList)
+            try
             {
-                Costs.Add(iv.TotalCost);
-                IDs.Add(iv.InvoiceNum);
-                Dates.Add(iv.InvoiceDate);
+                clsSearchLogic sl = new clsSearchLogic();
+
+                List<Invoice> InvoiceList = sl.getInvoices();
+
+                List<Decimal> Costs = new List<Decimal>();
+                List<int> IDs = new List<int>();
+                List<DateTime> Dates = new List<DateTime>();
+
+
+                foreach (Invoice iv in InvoiceList)
+                {
+                    Costs.Add(iv.TotalCost);
+                    IDs.Add(iv.InvoiceNum);
+                    Dates.Add(iv.InvoiceDate);
+                }
+
+                //Found this code online to delete duplicates from a list. 
+                Costs = Costs.Distinct().ToList();
+                IDs = IDs.Distinct().ToList();
+                Dates = Dates.Distinct().ToList();
+
+                cbTotalCharge.ItemsSource = Costs;
+                cbInvoiceDate.ItemsSource = Dates;
+                cbInvoiceNum.ItemsSource = IDs;
             }
-
-            //Found this code online to delete duplicates from a list. 
-            Costs = Costs.Distinct().ToList();
-            IDs = IDs.Distinct().ToList();
-            Dates = Dates.Distinct().ToList();
-
-            cbTotalCharge.ItemsSource = Costs;
-            cbInvoiceDate.ItemsSource = Dates;
-            cbInvoiceNum.ItemsSource = IDs;
-
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "."
+                    + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }//end of LoadComboBoxes()
 
-        //private void EditInvoiceButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (sender is Button && sender is not null)
-        //    {
-        //        SelectedInvoice = (Invoice)((FrameworkElement)sender).DataContext;
-        //        this.Hide();
-        //        this.Owner.Show();
-        //    }
-        //}
+        
+        /// <summary>
+        /// This function handles errors that arise from all the TryCatch blocks.
+        /// </summary>
+        /// <param name="sClass">String of the name of the class where the error occurred</param>
+        /// <param name="sMethod">String of the name of the method where the error occurred</param>
+        /// <param name="sMessage">String of the message of the error that occurred</param>
+        private void HandleError(string sClass, string sMethod, string sMessage)
+        {
+            try
+            {
+                MessageBox.Show(sClass + "." + sMethod + " -> " + sMessage);
+            }
+            catch (System.Exception ex)
+            {
+                System.IO.File.AppendAllText(@"C:\Error.txt", Environment.NewLine + "HandleError Exception: " + ex.Message);
+            }
+        }//End of HandleError
     }
 }
