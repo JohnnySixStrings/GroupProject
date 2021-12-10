@@ -83,6 +83,11 @@ namespace GroupProject.Main
             Invoice = _invoiceRepository.GetInvoive(Invoice.InvoiceNum);
         }
 
+        public void ChangeInvoice(Invoice source)
+        {
+          Invoice = _invoiceRepository.GetInvoive(source.InvoiceNum);
+        }
+
         public void AddItem(ItemDescription item)
         {
             SelectedInvoiceItems.Add(item);

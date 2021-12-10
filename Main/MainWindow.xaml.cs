@@ -38,6 +38,8 @@ namespace GroupProject
                 _itemsWindow.Hide();
                 this.Show();
             });
+            _searchWindow.InvoiceSelected += HandleInvoiceSelected;
+
         }
 
         private void NavigateToSearch(object sender, RoutedEventArgs e)
@@ -75,11 +77,17 @@ namespace GroupProject
                 _mainViewModel.AddItem((ItemDescription)ItemsComboBox.SelectedItem);
             }
         }
-
+        private void HandleInvoiceSelected(object sender, RoutedEventArgs e)
+        {
+            _mainViewModel.ChangeInvoice((Invoice)e.Source);
+            _searchWindow.Hide();
+            Show();
+        }
         public void Dispose()
         {
             CancelDisposableItem?.Dispose();
             CancelDisposableSearch?.Dispose();
+            _searchWindow.InvoiceSelected -= HandleInvoiceSelected;
         }
     }
 }
