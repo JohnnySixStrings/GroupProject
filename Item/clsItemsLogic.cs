@@ -10,8 +10,12 @@ using System.Windows;
 
 public class clsItemsLogic
 {
-    // clsItemsSQL SQL = new clsItemsSQL();
-    // char Code;
+    clsDataAccess DB = new clsDataAccess();
+    clsItemsSQL SQL = new clsItemsSQL();
+    string sSQL;
+    int iRetVal = 0;
+    decimal iRet;
+    string s;
 
     private readonly InvoiceRepository _invoiceRepository;
     public ObservableCollection<ItemDescription> Items { get; set; }
@@ -27,6 +31,33 @@ public class clsItemsLogic
     }
 
     /// <summary>
+    /// Checks if input is not valid. Returns true if not valid
+    /// </summary>
+    private bool NotValid(string iCode = "A", string iDesc = "A", string iCost = "1.00")
+    {
+        if (iCode == "" || iDesc == "" || iCost == "") return true;
+        else if (iCode.Length != 1) return true;
+        else if (!Decimal.TryParse(iCost, out iRet)) return true;
+        else if ((iCode + iDesc + iCost).IndexOf('\'') != -1) return true;
+        return false;
+    }
+
+    /// <summary>
+    /// Checks if an item exists in the database. returns true if there is.
+    /// </summary>
+    private bool CodeExists(string iCode)
+    {
+        for (int i = 0; i < Items.Count; i++)
+        {
+            if (Items[i].ItemCode == iCode)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
     /// Deletes selected item from database
     /// </summary>
     public void DeleteItem(string iCode)
@@ -35,14 +66,12 @@ public class clsItemsLogic
         // If not, delete it from the database
         try
         {
-            clsDataAccess DB = new clsDataAccess();
-            clsItemsSQL SQL = new clsItemsSQL();
-            string sSQL = SQL.SelectInvoiceID(iCode);
-            int iRetVal = 0;
+            if (NotValid(iCode) || !CodeExists(iCode)) return;
+            sSQL = SQL.SelectInvoiceID(iCode);
             DataSet DS = DB.ExecuteSQLStatement(sSQL, ref iRetVal);
             if(DS.Tables[0].Rows.Count > 0)
             {
-                string s = "Cannot delete as this item is listed on the following invoices: ";
+                s = "Cannot delete as this item is listed on the following invoices: ";
                 for(int i = 0; i < DS.Tables[0].Rows.Count; i++)
                 {
                     var invoiceNo = DS.Tables[0].Rows[i].ItemArray[0];
@@ -52,7 +81,6 @@ public class clsItemsLogic
                 MessageBox.Show(s);
                 return;
             }
-            int alpa = 1;
             sSQL = SQL.DeleteItemDesc(iCode);
             DB.ExecuteNonQuery(sSQL);
             for(int i = 0; i < Items.Count; i++)
@@ -79,9 +107,8 @@ public class clsItemsLogic
         // If so, Updates the selected item with new data
         try
         {
-            clsDataAccess DB = new clsDataAccess();
-            clsItemsSQL SQL = new clsItemsSQL();
-            string sSQL = SQL.UpdateItemDesc(iCode, iDesc, iCost);
+            if (NotValid(iCode) || !CodeExists(iCode)) return;
+            sSQL = SQL.UpdateItemDesc(iCode, iDesc, iCost);
             DB.ExecuteNonQuery(sSQL);
             for (int i = 0; i < Items.Count; i++)
             {
@@ -108,9 +135,8 @@ public class clsItemsLogic
         // If so, adds new item to the database
         try
         {
-            clsDataAccess DB = new clsDataAccess();
-            clsItemsSQL SQL = new clsItemsSQL();
-            string sSQL = SQL.InsertItemDesc(iCode, iDesc, iCost);
+            if (NotValid(iCode, iDesc, iCost) || CodeExists(iCode)) return;
+            sSQL = SQL.InsertItemDesc(iCode, iDesc, iCost);
             DB.ExecuteNonQuery(sSQL);
             ItemDescription ID = new ItemDescription();
             ID.Cost = Decimal.Parse(iCost, NumberStyles.AllowDecimalPoint);
