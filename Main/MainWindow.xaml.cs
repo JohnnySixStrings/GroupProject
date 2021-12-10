@@ -10,13 +10,14 @@ namespace GroupProject
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
-        private wndSearch _searchWindow;
-        private wndItems _itemsWindow;
-
+        private readonly wndSearch _searchWindow;
+        private readonly wndItems _itemsWindow;
+        private readonly IDisposable CancelDisposableSearch;
+        private readonly IDisposable CancelDisposableItem;
         private readonly MainViewModel _mainViewModel;
-        public MainWindow()
+        public MainWindow() 
         {
             _itemsWindow = new wndItems();
             _searchWindow = new wndSearch();
@@ -26,13 +27,13 @@ namespace GroupProject
             DataContext = _mainViewModel;
 
             InitializeComponent();
-            _searchWindow.CancelObservable.Subscribe((x) =>
+            CancelDisposableSearch = _searchWindow.CancelObservable.Subscribe((x) =>
             {
                 _searchWindow.Hide();
                 this.Show();
             });
 
-            _itemsWindow.CancelObservable.Subscribe(x =>
+            CancelDisposableItem = _itemsWindow.CancelObservable.Subscribe(x =>
             {
                 _itemsWindow.Hide();
                 this.Show();
@@ -73,6 +74,12 @@ namespace GroupProject
             {
                 _mainViewModel.AddItem((ItemDescription)ItemsComboBox.SelectedItem);
             }
+        }
+
+        public void Dispose()
+        {
+            CancelDisposableItem?.Dispose();
+            CancelDisposableSearch?.Dispose();
         }
     }
 }

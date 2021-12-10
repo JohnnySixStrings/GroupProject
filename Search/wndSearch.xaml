@@ -23,9 +23,7 @@
                 <DataGridTemplateColumn  Header="Action" IsReadOnly="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="EditInvoiceButton" Click="EditInvoiceButton_Click"  Margin="3" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Opacity="1">
-                                <materialDesign:PackIcon Kind="Edit"  Height="16" Width="16"/>
-                            </Button>
+                            <Button x:Name="EditInvoiceButton" Click="EditInvoiceButton_Click"  Margin="3" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Opacity="1" Content="Select"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
