@@ -33,7 +33,7 @@ namespace GroupProject.Search
         private bool bisClearingSelection = false;
 
         /// <summary>
-        /// Constructor for the Search window. Loads in the Combo boxes with unique items.
+        /// Constructor for the Search window. Loads in the Combo boxes with unique items. and load data
         /// </summary>
         public wndSearch()
         {
@@ -46,6 +46,7 @@ namespace GroupProject.Search
                     x => this.btnCancel.Click += x,
                     x => this.btnCancel.Click -= x);
 
+                dgResults.ItemsSource = SearchLogic.getInvoices();
                 LoadComboBoxes();
             }
             catch (Exception ex)
@@ -132,6 +133,11 @@ namespace GroupProject.Search
         {
             try
             {
+                if (bisClearingSelection)
+                {
+                    //used to exit function because we don't want to get the updated data 3 times when we reset/clear the selection.
+                    return;
+                }
                 clsSearchLogic sl = new clsSearchLogic();
 
                 dgResults.ItemsSource = sl.getUpdatedData(cbTotalCharge, cbInvoiceDate, cbInvoiceNum);

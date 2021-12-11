@@ -24,10 +24,17 @@ public class clsItemsLogic
     /// </summary>
     public clsItemsLogic()
     {
-        // Insert constructor code here.
-        _invoiceRepository = new InvoiceRepository();
-        var items = _invoiceRepository.GetAllItems();
-        Items = new ObservableCollection<ItemDescription>(items);
+        try
+        {
+            // Insert constructor code here.
+            _invoiceRepository = new InvoiceRepository();
+            var items = _invoiceRepository.GetAllItems();
+            Items = new ObservableCollection<ItemDescription>(items);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+        }
     }
 
     /// <summary>
@@ -35,11 +42,18 @@ public class clsItemsLogic
     /// </summary>
     private bool NotValid(string iCode = "A", string iDesc = "A", string iCost = "1.00")
     {
-        if (iCode == "" || iDesc == "" || iCost == "") return true;
-        else if (iCode.Length != 1) return true;
-        else if (!Decimal.TryParse(iCost, out iRet)) return true;
-        else if ((iCode + iDesc + iCost).IndexOf('\'') != -1) return true;
-        return false;
+        try
+        {
+            if (iCode == "" || iDesc == "" || iCost == "") return true;
+            else if (iCode.Length != 1) return true;
+            else if (!Decimal.TryParse(iCost, out iRet)) return true;
+            else if ((iCode + iDesc + iCost).IndexOf('\'') != -1) return true;
+            return false;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+        }
     }
 
     /// <summary>
@@ -47,14 +61,21 @@ public class clsItemsLogic
     /// </summary>
     private bool CodeExists(string iCode)
     {
-        for (int i = 0; i < Items.Count; i++)
+        try
         {
-            if (Items[i].ItemCode == iCode)
+            for (int i = 0; i < Items.Count; i++)
             {
-                return true;
+                if (Items[i].ItemCode == iCode)
+                {
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
+        catch (Exception ex)
+        {
+            throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+        }
     }
 
     /// <summary>
@@ -158,11 +179,18 @@ public class clsItemsLogic
     /// </summary>
     private void RefreshItems()
     {
-        var items = _invoiceRepository.GetAllItems();
-        Items.Clear();
-        foreach (var item in items)
+        try
         {
-            Items.Add(item);
+            var items = _invoiceRepository.GetAllItems();
+            Items.Clear();
+            foreach (var item in items)
+            {
+                Items.Add(item);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
         }
     }
 }
