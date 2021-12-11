@@ -52,9 +52,9 @@ namespace GroupProject.Repositories
             try
             {
                 using var connection = new OleDbConnection(_connectionString);
+                connection.Execute(@"DELETE FROM LineItems WHERE InvoiceNum = @invoiceNum", new { invoiceNum });
+                connection.Execute(@"DELETE FROM Invoices WHERE InvoiceNum = @invoiceNum", new { invoiceNum });
 
-                connection.Execute(@"DELETE FROM Invoices WHERE InvoiceNum = @invoiceNum", invoiceNum);
-                connection.Execute(@"DELETE FROM LineItems WHERE InvoiceNum = @invoiceNum", invoiceNum);
 
             }
             catch (Exception ex)

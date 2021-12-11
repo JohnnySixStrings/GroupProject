@@ -85,6 +85,8 @@ namespace GroupProject.Main
         public void DeleteInvoice()
         {
             _invoiceRepository.DeleteInvoice(Invoice.InvoiceNum);
+            UpdateContext();
+            NewInvoice();
 
         }
 

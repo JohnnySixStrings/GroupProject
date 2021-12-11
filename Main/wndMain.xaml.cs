@@ -18,49 +18,28 @@ namespace GroupProject
         /// <summary>
         /// Instance of the searchWindow
         /// </summary>
-        private readonly wndSearch _searchWindow;
+        private  wndSearch _searchWindow;
         /// <summary>
         /// Instance of the item window
         /// </summary>
-        private readonly wndItems _itemsWindow;
+        private  wndItems _itemsWindow;
         /// <summary>
         /// Disposable for subscription to the SearchCancelEvent
         /// </summary>
-        private readonly IDisposable CancelDisposableSearch;
+        private  IDisposable CancelDisposableSearch;
         /// <summary>
         /// Disposable for subscription to the Item exit/ cancel event
         /// </summary>
-        private readonly IDisposable CancelDisposableItem;
+        private  IDisposable CancelDisposableItem;
         /// <summary>
         /// Business logic class 
         /// </summary>
         private readonly clsMainLogic _mainViewModel;
         public MainWindow()
         {
-            _itemsWindow = new wndItems();
-            _searchWindow = new wndSearch();
             _mainViewModel = new clsMainLogic();
-
-
             DataContext = _mainViewModel;
-
             InitializeComponent();
-            CancelDisposableSearch = _searchWindow.CancelObservable.Subscribe((x) =>
-            {
-                _searchWindow.Hide();
-                this.Show();
-            });
-
-            CancelDisposableItem = _itemsWindow.CancelObservable.Subscribe(x =>
-            {
-                _itemsWindow.Hide();
-                this.Show();
-                _mainViewModel.UpdateContext();
-            });
-
-            _searchWindow.InvoiceSelected += HandleInvoiceSelected;
-            _searchWindow.Closed += ChildWindow_Closing;
-            _itemsWindow.Closed += ChildWindow_Closing;
         }
 
         /// <summary>
@@ -68,13 +47,33 @@ namespace GroupProject
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ChildWindow_Closing(object? sender, EventArgs e)
+        private void SearchWindow_Closing(object? sender, EventArgs e)
         {
             try
             {
-                _searchWindow?.Close();
-                _itemsWindow?.Close();
-                this.Close();
+                Show();
+                _mainViewModel.UpdateContext();
+                _searchWindow.Closing -= SearchWindow_Closing;
+                CancelDisposableSearch?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name, MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
+        }
+        /// <summary>
+        /// Handles the closing of all the windows if one is closed to not leave the program running in an un interactable state
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ItemWindow_Closing(object? sender, EventArgs e)
+        {
+            try
+            {
+                Show();
+                _mainViewModel.UpdateContext();
+                _itemsWindow.Closing -= ItemWindow_Closing;
+                CancelDisposableItem?.Dispose();
             }
             catch (Exception ex)
             {
@@ -91,9 +90,17 @@ namespace GroupProject
         {
             try
             {
-                this.Hide();
-                this._searchWindow.Show();
-                _searchWindow.Owner = this;
+                _searchWindow = new wndSearch();
+                _searchWindow.Show();
+                _searchWindow.Closed += SearchWindow_Closing;
+                _searchWindow.InvoiceSelected += HandleInvoiceSelected;
+                CancelDisposableSearch = _searchWindow.CancelObservable.Subscribe((x) =>
+                {
+                    _searchWindow.Close();
+
+                });
+                Hide();
+
             }
             catch (Exception ex)
             {
@@ -110,9 +117,17 @@ namespace GroupProject
         {
             try
             {
-                this.Hide();
+                _itemsWindow = new wndItems();
+                _itemsWindow.Closed += ItemWindow_Closing;
+                CancelDisposableItem = _itemsWindow.CancelObservable.Subscribe(x =>
+                {
+                    _itemsWindow.Close();
+                    Show();
+                    _mainViewModel.UpdateContext();
+                });
+                Hide();
                 _itemsWindow.Show();
-                _itemsWindow.Owner = this;
+
             }
             catch (Exception ex)
             {
@@ -130,6 +145,12 @@ namespace GroupProject
             try
             {
                 _mainViewModel.DeleteInvoice();
+                InvoiceDatePicker.IsEnabled = true;
+                InvoiceIdTextBox.IsEnabled = false;
+                TotalCostTextBox.IsEnabled = true;
+                LineItemsDataGrid.IsEnabled = true;
+                AddItemButton.IsEnabled = true;
+                InvoiceDeleteButton.IsEnabled = false;
             }
             catch (Exception ex)
             {
@@ -176,7 +197,7 @@ namespace GroupProject
                 TotalCostTextBox.IsEnabled = false;
                 LineItemsDataGrid.IsEnabled = false;
                 AddItemButton.IsEnabled = false;
-                InvoiceDeleteButton.IsEnabled = true;
+                InvoiceDeleteButton.IsEnabled = false;
             }
             catch (Exception ex)
             {
@@ -214,8 +235,7 @@ namespace GroupProject
             try
             {
                 _mainViewModel.ChangeInvoice((Invoice)e.Source);
-                _searchWindow.Hide();
-                Show();
+                _searchWindow.Close();
             }
             catch (Exception ex)
             {
@@ -231,8 +251,8 @@ namespace GroupProject
             CancelDisposableItem?.Dispose();
             CancelDisposableSearch?.Dispose();
             _searchWindow.InvoiceSelected -= HandleInvoiceSelected;
-            _searchWindow.Closing -= ChildWindow_Closing;
-            _itemsWindow.Closing -= ChildWindow_Closing;
+            _searchWindow.Closing -= SearchWindow_Closing;
+            _itemsWindow.Closing -= ItemWindow_Closing;
         }
 
         /// <summary>
