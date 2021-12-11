@@ -70,6 +70,11 @@ namespace GroupProject.Main
             {
                 Invoices = _invoiceRepository.GetAllInvoices().ToList();
                 var items = _invoiceRepository.GetAllItems().ToList();
+                if (Invoices.Contains(Invoice))
+                {
+                    var invoice = _invoiceRepository.GetInvoive(Invoice.InvoiceNum);
+                    Invoice = new Invoice(invoice);
+                }
                 Items.Clear();
                 foreach (var item in items)
                 {
