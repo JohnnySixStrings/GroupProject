@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 
 namespace GroupProject.Main
 {
@@ -43,14 +44,21 @@ namespace GroupProject.Main
         /// </summary>
         public clsMainLogic()
         {
-            _invoiceRepository = new InvoiceRepository();
-            Invoices = _invoiceRepository.GetAllInvoices().ToList();
-            var items = _invoiceRepository.GetAllItems().ToList();
-            Items = new ObservableCollection<ItemDescription>(items);
-            IsNewInvoice = true;
-            Invoice = new Invoice();
-            SelectedInvoiceItems = new ObservableCollection<ItemDescription>(Invoice?.LineItems);
-            SelectedInvoiceItems.CollectionChanged += SelectedInvoiceItems_CollectionChanged;
+            try
+            {
+                _invoiceRepository = new InvoiceRepository();
+                Invoices = _invoiceRepository.GetAllInvoices().ToList();
+                var items = _invoiceRepository.GetAllItems().ToList();
+                Items = new ObservableCollection<ItemDescription>(items);
+                IsNewInvoice = true;
+                Invoice = new Invoice();
+                SelectedInvoiceItems = new ObservableCollection<ItemDescription>(Invoice?.LineItems);
+                SelectedInvoiceItems.CollectionChanged += SelectedInvoiceItems_CollectionChanged;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -58,12 +66,19 @@ namespace GroupProject.Main
         /// </summary>
         public void UpdateContext()
         {
-            Invoices = _invoiceRepository.GetAllInvoices().ToList();
-            var items = _invoiceRepository.GetAllItems().ToList();
-            Items.Clear();
-            foreach (var item in items)
+            try
             {
-                Items.Add(item);
+                Invoices = _invoiceRepository.GetAllInvoices().ToList();
+                var items = _invoiceRepository.GetAllItems().ToList();
+                Items.Clear();
+                foreach (var item in items)
+                {
+                    Items.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
             }
         }
 
@@ -74,9 +89,16 @@ namespace GroupProject.Main
         /// <param name="e"></param>
         private void SelectedInvoiceItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            //update the total in the collection
-            Invoice.TotalCost = SelectedInvoiceItems.Select(i => i.Cost).Sum();
-            Invoice = new Invoice(Invoice);
+            try
+            {
+                //update the total in the collection
+                Invoice.TotalCost = SelectedInvoiceItems.Select(i => i.Cost).Sum();
+                Invoice = new Invoice(Invoice);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -84,12 +106,21 @@ namespace GroupProject.Main
         /// </summary>
         public void DeleteInvoice()
         {
-            if (Invoices.Select(i=> i.InvoiceNum).ToList().Contains(Invoice.InvoiceNum))
+
+            try
             {
-                _invoiceRepository.DeleteInvoice(Invoice.InvoiceNum);
-                UpdateContext();
-                NewInvoice();
+                if (Invoices.Select(i => i.InvoiceNum).ToList().Contains(Invoice.InvoiceNum))
+                {
+                    _invoiceRepository.DeleteInvoice(Invoice.InvoiceNum);
+                    UpdateContext();
+                    NewInvoice();
+                }
             }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
+
         }
 
         /// <summary>
@@ -97,9 +128,16 @@ namespace GroupProject.Main
         /// </summary>
         public void NewInvoice()
         {
-            Invoice = new Invoice();
-            SelectedInvoiceItems.Clear();
-            IsNewInvoice = true;
+            try
+            {
+                Invoice = new Invoice();
+                SelectedInvoiceItems.Clear();
+                IsNewInvoice = true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -107,33 +145,40 @@ namespace GroupProject.Main
         /// </summary>
         public void SaveInvoice()
         {
-            if (IsNewInvoice)
+            try
             {
-                if (Invoices.Select(i => i.InvoiceNum).Any(i => i == Invoice.InvoiceNum))
+                if (IsNewInvoice)
                 {
-                    return;
+                    if (Invoices.Select(i => i.InvoiceNum).Any(i => i == Invoice.InvoiceNum))
+                    {
+                        return;
+                    }
+                    var invoiceNum = _invoiceRepository.AddInvoice(Invoice);
+                    Invoice = _invoiceRepository.GetInvoive(invoiceNum);
                 }
-                var invoiceNum = _invoiceRepository.AddInvoice(Invoice);
-                Invoice = _invoiceRepository.GetInvoive(invoiceNum);
-            }
-            else
-            {
-                _invoiceRepository.UpdateInvoice(Invoice);
-            }
-
-            _invoiceRepository.DeleteLineItems(Invoice.InvoiceNum);
-            var insert = SelectedInvoiceItems
-                .Select((s, i) => new LineItem()
+                else
                 {
-                    InvoiceNum = Invoice.InvoiceNum,
-                    LineItemNumber = i,
-                    ItemCode = s.ItemCode
-                })
-                .ToList();
-            _invoiceRepository.AddInvoices(insert);
+                    _invoiceRepository.UpdateInvoice(Invoice);
+                }
 
-            Invoices = _invoiceRepository.GetAllInvoices().ToList();
-            Invoice = _invoiceRepository.GetInvoive(Invoice.InvoiceNum);
+                _invoiceRepository.DeleteLineItems(Invoice.InvoiceNum);
+                var insert = SelectedInvoiceItems
+                    .Select((s, i) => new LineItem()
+                    {
+                        InvoiceNum = Invoice.InvoiceNum,
+                        LineItemNumber = i,
+                        ItemCode = s.ItemCode
+                    })
+                    .ToList();
+                _invoiceRepository.AddInvoices(insert);
+
+                Invoices = _invoiceRepository.GetAllInvoices().ToList();
+                Invoice = _invoiceRepository.GetInvoive(Invoice.InvoiceNum);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
         /// <summary>
         /// Switches the state to the passed in invoice
@@ -141,12 +186,19 @@ namespace GroupProject.Main
         /// <param name="source"></param>
         public void ChangeInvoice(Invoice source)
         {
-            Invoice = _invoiceRepository.GetInvoive(source.InvoiceNum);
-            IsNewInvoice = false;
-            SelectedInvoiceItems.Clear();
-            foreach (var item in Invoice.LineItems)
+            try
             {
-                SelectedInvoiceItems.Add(item);
+                Invoice = _invoiceRepository.GetInvoive(source.InvoiceNum);
+                IsNewInvoice = false;
+                SelectedInvoiceItems.Clear();
+                foreach (var item in Invoice.LineItems)
+                {
+                    SelectedInvoiceItems.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
             }
         }
 
@@ -156,7 +208,14 @@ namespace GroupProject.Main
         /// <param name="item"></param>
         public void AddItem(ItemDescription item)
         {
-            SelectedInvoiceItems.Add(item);
+            try
+            {
+                SelectedInvoiceItems.Add(item);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
 
         }
 
@@ -165,7 +224,14 @@ namespace GroupProject.Main
         /// </summary>
         public void Dispose()
         {
-            SelectedInvoiceItems.CollectionChanged -= SelectedInvoiceItems_CollectionChanged;
+            try
+            {
+                SelectedInvoiceItems.CollectionChanged -= SelectedInvoiceItems_CollectionChanged;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
     }
 }

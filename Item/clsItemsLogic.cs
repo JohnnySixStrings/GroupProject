@@ -108,7 +108,7 @@ public class clsItemsLogic
         // If so, Updates the selected item with new data
         try
         {
-            if (NotValid(iCode) || !CodeExists(iCode)) return;
+            if (NotValid(iCode, iDesc, iCost) || !CodeExists(iCode)) return;
             sSQL = SQL.UpdateItemDesc(iCode, iDesc, iCost);
             DB.ExecuteNonQuery(sSQL);
             for (int i = 0; i < Items.Count; i++)

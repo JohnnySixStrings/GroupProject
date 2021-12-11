@@ -2,6 +2,7 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
+using System.Reflection;
 
 namespace GroupProject.Item
 {
@@ -17,12 +18,19 @@ namespace GroupProject.Item
 
         public wndItems()
         {
-            InitializeComponent();
-            ItemsLogic = new clsItemsLogic();
-            DataContext = ItemsLogic;
-            CancelObservable = Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(
-                x => this.ExitButton.Click += x,
-                x => this.ExitButton.Click -= x);
+            try
+            {
+                InitializeComponent();
+                ItemsLogic = new clsItemsLogic();
+                DataContext = ItemsLogic;
+                CancelObservable = Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(
+                    x => this.ExitButton.Click += x,
+                    x => this.ExitButton.Click -= x);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -35,8 +43,15 @@ namespace GroupProject.Item
             // Runs clsItemsLogic.UpdateItem
             // If it fails, display error message
             // If it succeeds, update UI and display success message
-            ItemsLogic.UpdateItem(Code.Text, txtDesc.Text, txtCost.Text);
-            dgItems.Items.Refresh();
+            try
+            {
+                ItemsLogic.UpdateItem(Code.Text, txtDesc.Text, txtCost.Text);
+                dgItems.Items.Refresh();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -49,8 +64,15 @@ namespace GroupProject.Item
             // Runs clsItemsLogic.DeleteItem
             // If it fails, display error message
             // If it succeeds, update UI and display success message
-            ItemsLogic.DeleteItem(Code.Text);
-            dgItems.Items.Refresh();
+            try
+            {
+                ItemsLogic.DeleteItem(Code.Text);
+                dgItems.Items.Refresh();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -63,8 +85,15 @@ namespace GroupProject.Item
             // Runs clsItemsLogic.NewItem
             // If it fails, display error message
             // If it succeeds, update UI and display success message
-            ItemsLogic.NewItem(Code.Text, txtDesc.Text, txtCost.Text);
-            dgItems.Items.Refresh();
+            try
+            {
+                ItemsLogic.NewItem(Code.Text, txtDesc.Text, txtCost.Text);
+                dgItems.Items.Refresh();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(MethodInfo.GetCurrentMethod().DeclaringType.Name + "." + MethodInfo.GetCurrentMethod().Name + " -> " + ex.Message);
+            }
         }
 
         /// <summary>
