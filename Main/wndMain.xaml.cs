@@ -122,8 +122,6 @@ namespace GroupProject
                 CancelDisposableItem = _itemsWindow.CancelObservable.Subscribe(x =>
                 {
                     _itemsWindow.Close();
-                    Show();
-                    _mainViewModel.UpdateContext();
                 });
                 Hide();
                 _itemsWindow.Show();

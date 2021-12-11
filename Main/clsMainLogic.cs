@@ -84,10 +84,12 @@ namespace GroupProject.Main
         /// </summary>
         public void DeleteInvoice()
         {
-            _invoiceRepository.DeleteInvoice(Invoice.InvoiceNum);
-            UpdateContext();
-            NewInvoice();
-
+            if (Invoices.Select(i=> i.InvoiceNum).ToList().Contains(Invoice.InvoiceNum))
+            {
+                _invoiceRepository.DeleteInvoice(Invoice.InvoiceNum);
+                UpdateContext();
+                NewInvoice();
+            }
         }
 
         /// <summary>
