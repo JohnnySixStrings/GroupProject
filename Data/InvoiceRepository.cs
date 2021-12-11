@@ -54,7 +54,7 @@ namespace GroupProject.Repositories
                 using var connection = new OleDbConnection(_connectionString);
 
                 connection.Execute(@"DELETE FROM Invoices WHERE InvoiceNum = @invoiceNum", invoiceNum);
-                connection.Execute(@"DELETE FROM LineItems WHERE InvoiceNum = @invoiceNum", invoiceNum );
+                connection.Execute(@"DELETE FROM LineItems WHERE InvoiceNum = @invoiceNum", invoiceNum);
 
             }
             catch (Exception ex)
@@ -162,7 +162,7 @@ FROM (Invoices LEFT OUTER JOIN LineItems ON (Invoices.InvoiceNum = LineItems.Inv
                 using var connection = new OleDbConnection(_connectionString);
                 foreach (var lineItem in insert)
                 {
-                   var count = connection.Execute("INSERT INTO LineItems (InvoiceNum, LineItemNum, ItemCode) Values (@InvoiceNum,@LineItemNumber,@ItemCode)", new { lineItem.InvoiceNum, lineItem.LineItemNumber, lineItem.ItemCode });
+                    var count = connection.Execute("INSERT INTO LineItems (InvoiceNum, LineItemNum, ItemCode) Values (@InvoiceNum,@LineItemNumber,@ItemCode)", new { lineItem.InvoiceNum, lineItem.LineItemNumber, lineItem.ItemCode });
                 }
             }
             catch (Exception ex)

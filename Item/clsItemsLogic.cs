@@ -1,11 +1,11 @@
-﻿using GroupProject.Models;
+﻿using GroupProject.Item;
+using GroupProject.Models;
 using GroupProject.Repositories;
-using System.Collections.ObjectModel;
-using GroupProject.Item;
 using System;
+using System.Collections.ObjectModel;
+using System.Data;
 using System.Globalization;
 using System.Reflection;
-using System.Data;
 using System.Windows;
 
 public class clsItemsLogic
@@ -69,10 +69,10 @@ public class clsItemsLogic
             if (NotValid(iCode) || !CodeExists(iCode)) return;
             sSQL = SQL.SelectInvoiceID(iCode);
             DataSet DS = DB.ExecuteSQLStatement(sSQL, ref iRetVal);
-            if(DS.Tables[0].Rows.Count > 0)
+            if (DS.Tables[0].Rows.Count > 0)
             {
                 s = "Cannot delete as this item is listed on the following invoices: ";
-                for(int i = 0; i < DS.Tables[0].Rows.Count; i++)
+                for (int i = 0; i < DS.Tables[0].Rows.Count; i++)
                 {
                     var invoiceNo = DS.Tables[0].Rows[i].ItemArray[0];
                     if (invoiceNo != null) s += invoiceNo.ToString();
@@ -83,7 +83,7 @@ public class clsItemsLogic
             }
             sSQL = SQL.DeleteItemDesc(iCode);
             DB.ExecuteNonQuery(sSQL);
-            for(int i = 0; i < Items.Count; i++)
+            for (int i = 0; i < Items.Count; i++)
             {
                 if (Items[i].ItemCode == iCode)
                 {

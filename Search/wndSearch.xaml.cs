@@ -183,7 +183,7 @@ namespace GroupProject.Search
             }
         }//end of LoadComboBoxes()
 
-        
+
         /// <summary>
         /// This function handles errors that arise from all the TryCatch blocks.
         /// </summary>

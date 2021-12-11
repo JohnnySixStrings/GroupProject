@@ -3,6 +3,8 @@ using GroupProject.Main;
 using GroupProject.Models;
 using GroupProject.Search;
 using System;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
@@ -33,7 +35,7 @@ namespace GroupProject
         /// Business logic class 
         /// </summary>
         private readonly clsMainLogic _mainViewModel;
-        public MainWindow() 
+        public MainWindow()
         {
             _itemsWindow = new wndItems();
             _searchWindow = new wndSearch();
@@ -68,9 +70,16 @@ namespace GroupProject
         /// <param name="e"></param>
         private void ChildWindow_Closing(object? sender, EventArgs e)
         {
-            _searchWindow?.Close();
-            _itemsWindow?.Close();
-            this.Close();
+            try
+            {
+                _searchWindow?.Close();
+                _itemsWindow?.Close();
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name, MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
         }
 
         /// <summary>
@@ -80,10 +89,16 @@ namespace GroupProject
         /// <param name="e"></param>
         private void NavigateToSearch(object sender, RoutedEventArgs e)
         {
-            this.Hide();
-            this._searchWindow.Show();
-            _searchWindow.Owner = this;
-
+            try
+            {
+                this.Hide();
+                this._searchWindow.Show();
+                _searchWindow.Owner = this;
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name, MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
         }
 
         /// <summary>
@@ -93,9 +108,16 @@ namespace GroupProject
         /// <param name="e"></param>
         private void NavigateToItems(object sender, RoutedEventArgs e)
         {
-            this.Hide();
-            _itemsWindow.Show();
-            _itemsWindow.Owner = this;
+            try
+            {
+                this.Hide();
+                _itemsWindow.Show();
+                _itemsWindow.Owner = this;
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name, MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
         }
 
         /// <summary>
@@ -105,7 +127,14 @@ namespace GroupProject
         /// <param name="e"></param>
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            _mainViewModel.DeleteInvoice();
+            try
+            {
+                _mainViewModel.DeleteInvoice();
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name, MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
         }
 
         /// <summary>
@@ -115,13 +144,20 @@ namespace GroupProject
         /// <param name="e"></param>
         private void NewButton_Click(object sender, RoutedEventArgs e)
         {
-            _mainViewModel.NewInvoice();
-            InvoiceDatePicker.IsEnabled = true;
-            InvoiceIdTextBox.IsEnabled = false;
-            TotalCostTextBox.IsEnabled = true;
-            LineItemsDataGrid.IsEnabled = true;
-            AddItemButton.IsEnabled = true;
-            InvoiceDeleteButton.IsEnabled = false;
+            try
+            {
+                _mainViewModel.NewInvoice();
+                InvoiceDatePicker.IsEnabled = true;
+                InvoiceIdTextBox.IsEnabled = false;
+                TotalCostTextBox.IsEnabled = true;
+                LineItemsDataGrid.IsEnabled = true;
+                AddItemButton.IsEnabled = true;
+                InvoiceDeleteButton.IsEnabled = false;
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name, MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
 
         }
 
@@ -132,13 +168,20 @@ namespace GroupProject
         /// <param name="e"></param>
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            _mainViewModel.SaveInvoice();
-            InvoiceDatePicker.IsEnabled = false;
-            InvoiceIdTextBox.IsEnabled = false;
-            TotalCostTextBox.IsEnabled = false;
-            LineItemsDataGrid.IsEnabled = false;
-            AddItemButton.IsEnabled = false;
-            InvoiceDeleteButton.IsEnabled = true;
+            try
+            {
+                _mainViewModel.SaveInvoice();
+                InvoiceDatePicker.IsEnabled = false;
+                InvoiceIdTextBox.IsEnabled = false;
+                TotalCostTextBox.IsEnabled = false;
+                LineItemsDataGrid.IsEnabled = false;
+                AddItemButton.IsEnabled = false;
+                InvoiceDeleteButton.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name, MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
         }
 
         /// <summary>
@@ -148,9 +191,16 @@ namespace GroupProject
         /// <param name="e"></param>
         private void AddItemButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ItemsComboBox.SelectedItem != null)
+            try
             {
-                _mainViewModel.AddItem((ItemDescription)ItemsComboBox.SelectedItem);
+                if (ItemsComboBox.SelectedItem != null)
+                {
+                    _mainViewModel.AddItem((ItemDescription)ItemsComboBox.SelectedItem);
+                }
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name, MethodInfo.GetCurrentMethod().Name, ex.Message);
             }
         }
 
@@ -161,9 +211,16 @@ namespace GroupProject
         /// <param name="e"></param>
         private void HandleInvoiceSelected(object? sender, RoutedEventArgs e)
         {
-            _mainViewModel.ChangeInvoice((Invoice)e.Source);
-            _searchWindow.Hide();
-            Show();
+            try
+            {
+                _mainViewModel.ChangeInvoice((Invoice)e.Source);
+                _searchWindow.Hide();
+                Show();
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name, MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
         }
 
         /// <summary>
@@ -196,12 +253,37 @@ namespace GroupProject
         /// <param name="e"></param>
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-           InvoiceDatePicker.IsEnabled = true;
-           InvoiceIdTextBox.IsEnabled = true;
-           TotalCostTextBox.IsEnabled = true;
-           LineItemsDataGrid.IsEnabled = true;
-           AddItemButton.IsEnabled = true;
-           InvoiceDeleteButton.IsEnabled = true;
+            try
+            {
+                InvoiceDatePicker.IsEnabled = true;
+                InvoiceIdTextBox.IsEnabled = true;
+                TotalCostTextBox.IsEnabled = true;
+                LineItemsDataGrid.IsEnabled = true;
+                AddItemButton.IsEnabled = true;
+                InvoiceDeleteButton.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                HandleError(MethodInfo.GetCurrentMethod().DeclaringType.Name,
+                    MethodInfo.GetCurrentMethod().Name, ex.Message);
+            }
+        }
+        /// <summary>
+        /// Method for handling the errors and displaying them
+        /// </summary>
+        /// <param name="className"></param>
+        /// <param name="methodName"></param>
+        /// <param name="message"></param>
+        private static void HandleError(string className, string methodName, string message)
+        {
+            try
+            {
+                MessageBox.Show(className + "." + methodName + " -> " + message);
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllText(@"C:\Error.txt", Environment.NewLine + "HandleError Exception: " + ex.Message);
+            }
         }
     }
 }
